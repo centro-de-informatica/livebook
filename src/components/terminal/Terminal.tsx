@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback, type ReactNode, type CSSProperties } from "react";
-import { V86Emulator, type V86EmulatorConfig, type V86ImagePreset } from "../v86/V86Emulator";
-import { V86Controller } from "../v86/V86Controller";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, type ReactNode, type CSSProperties } from "react";
+import { V86Emulator, type V86EmulatorConfig, type V86ImagePreset, type V86NetworkConfig, type V86FilesystemConfig } from "../v86/V86Emulator";
+import { V86Controller, type WaitForScreenOptions, type ExecuteCommandOptions } from "../v86/V86Controller";
 import type { V86 } from "../../types/v86";
 
 // ============================================
@@ -9,14 +9,9 @@ import type { V86 } from "../../types/v86";
 
 export type TerminalPreset = V86ImagePreset;
 
-export interface TerminalNetworkConfig {
-  /** Tipo de dispositivo de rede */
-  type?: "ne2k" | "virtio";
-  /** URL do relay websocket para networking */
-  relayUrl?: string;
-  /** Usar fetch para networking (padrão: true quando não há relayUrl) */
-  useFetch?: boolean;
-}
+export interface TerminalNetworkConfig extends V86NetworkConfig {}
+
+export interface TerminalFilesystemConfig extends V86FilesystemConfig {}
 
 export interface TerminalDisplayConfig {
   /** Largura do container */
@@ -43,66 +38,88 @@ export interface TerminalConfig {
   /** Preset de imagem (alpine, buildroot, linux4) */
   preset?: TerminalPreset;
   
-  // Boot options (quando não usar preset)
+  // Boot options (quando nao usar preset)
   /** URL da imagem de CD-ROM */
   cdromUrl?: string;
   /** URL da imagem bzimage (kernel) */
   bzimageUrl?: string;
+  /** URL da imagem initrd */
+  initrdUrl?: string;
   /** URL da imagem de HD */
   hdaUrl?: string;
+  /** URL da segunda imagem de HD */
+  hdbUrl?: string;
+  /** URL da imagem de disquete */
+  fdaUrl?: string;
   /** Linha de comando do kernel */
   cmdline?: string;
   /** Estado inicial salvo */
   initialStateUrl?: string;
+  /** Preservar MAC do state */
+  preserveMacFromState?: boolean;
 
   // Recursos
-  /** Tamanho da memória em MB (padrão: 128) */
+  /** Tamanho da memoria em MB (padrao: 128) */
   memoryMB?: number;
-  /** Tamanho da memória VGA em MB (padrão: 8) */
+  /** Tamanho da memoria VGA em MB (padrao: 8) */
   vgaMemoryMB?: number;
 
   // Comportamento
-  /** Iniciar automaticamente (padrão: true) */
+  /** Iniciar automaticamente (padrao: true) */
   autostart?: boolean;
-  /** Habilitar teclado (padrão: true) */
+  /** Habilitar teclado (padrao: true) */
   enableKeyboard?: boolean;
-  /** Habilitar mouse (padrão: true) */
+  /** Habilitar mouse (padrao: true) */
   enableMouse?: boolean;
   /** Habilitar ACPI */
   acpi?: boolean;
+  /** Habilitar virtio console */
+  virtioConsole?: boolean;
+  /** Habilitar virtio balloon */
+  virtioBalloon?: boolean;
+  /** Desabilitar JIT */
+  disableJit?: boolean;
+  /** Buscar bzimage/initrd do filesystem */
+  bzimageInitrdFromFilesystem?: boolean;
 
   // Networking
-  /** Configuração de rede */
+  /** Configuracao de rede */
   network?: TerminalNetworkConfig;
 
   // Display
-  /** Configuração visual */
+  /** Configuracao visual */
   display?: TerminalDisplayConfig;
 
   // Filesystem 9p
-  /** URL base do filesystem 9p */
-  filesystemBaseUrl?: string;
-  /** JSON do filesystem 9p */
-  filesystemBasefs?: string;
+  /** Configuracao do filesystem 9p */
+  filesystem?: TerminalFilesystemConfig;
 
   // Paths personalizados (BIOS e imagens)
-  /** Path da BIOS (padrão: /v86/bios/seabios.bin) */
+  /** Path da BIOS (padrao: /v86/bios/seabios.bin) */
   biosUrl?: string;
-  /** Path da VGA BIOS (padrão: /v86/bios/vgabios.bin) */
+  /** Path da VGA BIOS (padrao: /v86/bios/vgabios.bin) */
   vgaBiosUrl?: string;
 }
 
 export interface TerminalCallbacks {
-  /** Chamado quando o emulador está pronto */
+  /** Chamado quando o emulador esta pronto */
   onReady?: (controller: V86Controller) => void;
   /** Chamado quando o emulador inicia */
   onStarted?: () => void;
   /** Chamado quando o emulador para */
   onStopped?: () => void;
-  /** Chamado a cada caractere de saída serial */
+  /** Chamado a cada caractere de saida serial */
   onSerialOutput?: (char: string) => void;
   /** Chamado a cada caractere na tela (modo texto) */
   onScreenChar?: (data: [number, number, number, number, number]) => void;
+  /** Chamado quando o tamanho da tela muda [cols, rows, ???] */
+  onScreenSetSize?: (data: [number, number, number]) => void;
+  /** Chamado quando o mouse e habilitado pelo guest */
+  onMouseEnable?: (enabled: boolean) => void;
+  /** Chamado durante downloads */
+  onDownloadProgress?: (progress: { file_name: string; loaded: number; total: number }) => void;
+  /** Chamado em caso de erro de download */
+  onDownloadError?: (error: { file_name: string; error: Error }) => void;
   /** Chamado em caso de erro */
   onError?: (error: Error) => void;
 }
@@ -166,13 +183,25 @@ export function Terminal({
   preset,
   cdromUrl,
   bzimageUrl,
+  initrdUrl,
   hdaUrl,
+  hdbUrl,
+  fdaUrl,
   cmdline,
+  initialStateUrl,
+  preserveMacFromState,
   memoryMB = 128,
   vgaMemoryMB = 8,
   autostart = true,
   enableKeyboard = true,
   enableMouse = true,
+  acpi,
+  virtioConsole,
+  virtioBalloon,
+  disableJit,
+  bzimageInitrdFromFilesystem,
+  network,
+  filesystem,
   display = {},
   biosUrl,
   vgaBiosUrl,
@@ -183,6 +212,10 @@ export function Terminal({
   onStopped,
   onSerialOutput,
   onScreenChar,
+  onScreenSetSize,
+  onMouseEnable,
+  onDownloadProgress,
+  onDownloadError,
   onError,
 
   // React props
@@ -194,6 +227,34 @@ export function Terminal({
   const [controller] = useState(() => new V86Controller());
   const [error, setError] = useState<Error | null>(null);
 
+  // Refs para callbacks (evita stale closures)
+  // Inicializadas com os valores atuais das props
+  const onReadyRef = useRef(onReady);
+  const onStartedRef = useRef(onStarted);
+  const onStoppedRef = useRef(onStopped);
+  const onSerialOutputRef = useRef(onSerialOutput);
+  const onScreenCharRef = useRef(onScreenChar);
+  const onScreenSetSizeRef = useRef(onScreenSetSize);
+  const onMouseEnableRef = useRef(onMouseEnable);
+  const onDownloadProgressRef = useRef(onDownloadProgress);
+  const onDownloadErrorRef = useRef(onDownloadError);
+  const onErrorRef = useRef(onError);
+
+  // Atualiza refs ANTES de qualquer render (useLayoutEffect)
+  // Isso garante que as refs estejam atualizadas antes dos effects filhos rodarem
+  useLayoutEffect(() => {
+    onReadyRef.current = onReady;
+    onStartedRef.current = onStarted;
+    onStoppedRef.current = onStopped;
+    onSerialOutputRef.current = onSerialOutput;
+    onScreenCharRef.current = onScreenChar;
+    onScreenSetSizeRef.current = onScreenSetSize;
+    onMouseEnableRef.current = onMouseEnable;
+    onDownloadProgressRef.current = onDownloadProgress;
+    onDownloadErrorRef.current = onDownloadError;
+    onErrorRef.current = onError;
+  });
+
   // Merge display config com defaults
   const displayConfig = { ...DEFAULT_DISPLAY, ...display };
 
@@ -203,22 +264,34 @@ export function Terminal({
       preset,
       cdromUrl,
       bzimageUrl,
+      initrdUrl,
       hdaUrl,
+      hdbUrl,
+      fdaUrl,
       cmdline,
+      initialStateUrl,
+      preserveMacFromState,
       memorySize: memoryMB * 1024 * 1024,
       vgaMemorySize: vgaMemoryMB * 1024 * 1024,
       autostart,
+      acpi,
+      virtioConsole,
+      virtioBalloon,
+      disableJit,
+      bzimageInitrdFromFilesystem,
+      network,
+      filesystem,
       biosUrl,
       vgaBiosUrl,
     }).filter(([_, v]) => v !== undefined)
   ) as V86EmulatorConfig;
 
-  // Handler quando o emulador está pronto
+  // Handler quando o emulador esta pronto
   const handleReady = useCallback((emulator: V86) => {
     try {
       controller.attach(emulator);
       
-      // Aplicar configurações
+      // Aplicar configuracoes
       if (!enableKeyboard) {
         controller.setKeyboardEnabled(false);
       }
@@ -229,18 +302,53 @@ export function Terminal({
         controller.setScreenScale(displayConfig.scale, displayConfig.scale);
       }
 
-      onReady?.(controller);
+      onReadyRef.current?.(controller);
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       setError(error);
-      onError?.(error);
+      onErrorRef.current?.(error);
     }
-  }, [controller, enableKeyboard, enableMouse, displayConfig.scale, onReady, onError]);
+  }, [controller, enableKeyboard, enableMouse, displayConfig.scale]);
+
+  // Handler de started
+  const handleStarted = useCallback(() => {
+    onStartedRef.current?.();
+  }, []);
+
+  // Handler de stopped
+  const handleStopped = useCallback(() => {
+    onStoppedRef.current?.();
+  }, []);
+
+  // Handler de screen char
+  const handleScreenChar = useCallback((data: [number, number, number, number, number]) => {
+    onScreenCharRef.current?.(data);
+  }, []);
 
   // Handler de output serial
   const handleSerialOutput = useCallback((char: string) => {
-    onSerialOutput?.(char);
-  }, [onSerialOutput]);
+    onSerialOutputRef.current?.(char);
+  }, []);
+
+  // Handler de tamanho de tela
+  const handleScreenSetSize = useCallback((data: [number, number, number]) => {
+    onScreenSetSizeRef.current?.(data);
+  }, []);
+
+  // Handler de habilitacao do mouse
+  const handleMouseEnable = useCallback((enabled: boolean) => {
+    onMouseEnableRef.current?.(enabled);
+  }, []);
+
+  // Handler de progresso de download
+  const handleDownloadProgress = useCallback((progress: { file_name: string; loaded: number; total: number }) => {
+    onDownloadProgressRef.current?.(progress);
+  }, []);
+
+  // Handler de erro de download
+  const handleDownloadError = useCallback((error: { file_name: string; error: Error }) => {
+    onDownloadErrorRef.current?.(error);
+  }, []);
 
   // Cleanup
   useEffect(() => {
@@ -284,10 +392,14 @@ export function Terminal({
       <V86Emulator
         config={v86Config}
         onReady={handleReady}
-        onStarted={onStarted}
-        onStopped={onStopped}
+        onStarted={handleStarted}
+        onStopped={handleStopped}
         onSerialOutput={handleSerialOutput}
-        onScreenPutChar={onScreenChar}
+        onScreenPutChar={handleScreenChar}
+        onScreenSetSize={handleScreenSetSize}
+        onMouseEnable={handleMouseEnable}
+        onDownloadProgress={handleDownloadProgress}
+        onDownloadError={handleDownloadError}
       />
       {children}
     </div>
@@ -313,17 +425,30 @@ export function Terminal({
 export function useTerminal() {
   const controllerRef = useRef<V86Controller | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
 
   const handleReady = useCallback((controller: V86Controller) => {
     controllerRef.current = controller;
     setIsReady(true);
+    setIsRunning(controller.isRunning());
   }, []);
 
-  const sendCommand = useCallback(async (command: string, options?: { timeout?: number }) => {
+  const sendCommand = useCallback(async (command: string, options?: ExecuteCommandOptions) => {
     if (!controllerRef.current) {
       throw new Error("Terminal not ready");
     }
     return controllerRef.current.executeCommand(command, options);
+  }, []);
+
+  const executeAndWait = useCallback(async (
+    command: string,
+    waitFor: string | RegExp,
+    options?: WaitForScreenOptions
+  ) => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    return controllerRef.current.executeAndWait(command, waitFor, options);
   }, []);
 
   const sendText = useCallback((text: string) => {
@@ -334,13 +459,105 @@ export function useTerminal() {
     controllerRef.current?.sendKeyboardText(text);
   }, []);
 
+  const sendKeys = useCallback((keys: number[]) => {
+    controllerRef.current?.sendKeys(keys);
+  }, []);
+
+  const waitForScreenText = useCallback(async (
+    text: string | RegExp,
+    options?: WaitForScreenOptions
+  ) => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    return controllerRef.current.waitForScreenText(text, options);
+  }, []);
+
+  const waitForSerialOutput = useCallback(async (
+    expected: string | RegExp,
+    options?: WaitForScreenOptions
+  ) => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    return controllerRef.current.waitForSerialOutput(expected, options);
+  }, []);
+
+  const getScreenText = useCallback(() => {
+    return controllerRef.current?.getScreenText() ?? "";
+  }, []);
+
+  const saveState = useCallback(async () => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    return controllerRef.current.saveState();
+  }, []);
+
+  const loadState = useCallback(async (state: ArrayBuffer) => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    return controllerRef.current.loadState(state);
+  }, []);
+
+  const restart = useCallback(async () => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    controllerRef.current.restart();
+    setIsRunning(true);
+  }, []);
+
+  const stop = useCallback(async () => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    await controllerRef.current.stop();
+    setIsRunning(false);
+  }, []);
+
+  const run = useCallback(async () => {
+    if (!controllerRef.current) {
+      throw new Error("Terminal not ready");
+    }
+    controllerRef.current.run();
+    setIsRunning(true);
+  }, []);
+
+  const goFullscreen = useCallback(() => {
+    controllerRef.current?.goFullscreen();
+  }, []);
+
+  const makeScreenshot = useCallback(() => {
+    return controllerRef.current?.makeScreenshot() ?? null;
+  }, []);
+
   return {
     controller: controllerRef,
     isReady,
+    isRunning,
     handleReady,
+    // Execution
     sendCommand,
+    executeAndWait,
     sendText,
     sendKeyboardText,
+    sendKeys,
+    // Waiting
+    waitForScreenText,
+    waitForSerialOutput,
+    // Screen
+    getScreenText,
+    goFullscreen,
+    makeScreenshot,
+    // State
+    saveState,
+    loadState,
+    // Control
+    restart,
+    stop,
+    run,
   };
 }
 

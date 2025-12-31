@@ -1,21 +1,8 @@
 ---
 import RootLayout from "../layouts/RootLayout.astro";
-import { Terminal } from "../components/terminal";
+import { TerminalDemo } from "../components/terminal/TerminalDemo";
 ---
 
 <RootLayout title="Linux Sandbox">
-	<Terminal
-		client:only="react"
-		preset="buildroot"
-		display={{
-			width: 720,
-			height: 400,
-			borderRadius: 8,
-		}}
-		onReady={(controller) => {
-			console.log("Terminal pronto!", controller);
-			// Expor controller globalmente para debug
-			(window as any).terminalController = controller;
-		}}
-	/>
+	<TerminalDemo client:only="react" />
 </RootLayout>

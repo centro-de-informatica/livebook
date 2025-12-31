@@ -11,16 +11,18 @@ const ASSETS = [
   { url: "https://github.com/copy/v86/raw/master/bios/seabios.bin", dest: "bios/seabios.bin" },
   { url: "https://github.com/copy/v86/raw/master/bios/vgabios.bin", dest: "bios/vgabios.bin" },
   { url: "https://i.copy.sh/buildroot-bzimage68.bin", dest: "images/buildroot-bzimage68.bin" },
+  { url: "https://i.copy.sh/linux4.iso", dest: "images/linux4.iso", },
+  { url: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86/alpine-virt-3.19.9-x86.iso", dest: "images/alpine-virt-3.19.9-x86.iso" }
 ];
 
 async function downloadFile({ url, dest }) {
   const fullPath = join(PUBLIC_DIR, dest);
-  
+
   try {
     await access(fullPath);
     console.log(`[ok] ${dest}`);
     return;
-  } catch {}
+  } catch { }
 
   console.log(`[..] ${dest}`);
   await mkdir(dirname(fullPath), { recursive: true });
@@ -37,4 +39,4 @@ async function main() {
   console.log("[ok] done");
 }
 
-main().catch((e) => { console.error(e.message); process.exit(1); });
+await main().catch((e) => { console.error(e.message); process.exit(1); });
