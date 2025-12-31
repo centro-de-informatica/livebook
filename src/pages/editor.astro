@@ -1,0 +1,48 @@
+---
+import RootLayout from "../layouts/RootLayout.astro";
+import { CodeEditor } from "../components/code-editor";
+---
+
+<RootLayout title="Editor">
+  <div class="editor-container">
+    <h1>Code Editor</h1>
+    <div class="editor-wrapper">
+      <CodeEditor
+        client:only="react"
+        initialValue={`function greet(name) {
+  console.log(\`Hello, \${name}!\`);
+}
+
+greet("World");`}
+        language="javascript"
+        theme="oneDark"
+        lineNumbers={true}
+        closeBrackets={true}
+        history={true}
+        bracketMatching={true}
+        autocompletion={true}
+        foldGutter={true}
+        highlightActiveLine={true}
+        height="400px"
+      />
+    </div>
+  </div>
+</RootLayout>
+
+<style>
+  .editor-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .editor-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+</style>
