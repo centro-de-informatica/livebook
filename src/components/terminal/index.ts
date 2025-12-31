@@ -30,3 +30,6 @@ export {
 
 // Re-export V86Controller for advanced usage
 export { V86Controller } from "../v86/V86Controller";
+
+// Re-export v86 types
+export type { V86, V86Options, V86Image, Event as V86Event } from "../../types/v86";

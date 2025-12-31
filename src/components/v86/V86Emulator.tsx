@@ -1,10 +1,11 @@
 import { useEffect, useRef, useCallback } from "react";
-import type { V86, V86Options, V86Event, V86Image } from "../../types/v86";
+import type { V86 as V86Type, V86Options, V86Image } from "../../types/v86";
+// Import the wasm file path from the v86 package for proper bundler resolution
+import v86WasmUrl from "v86/build/v86.wasm?url";
 
 export type V86ImagePreset = "alpine" | "buildroot" | "linux4";
 
 export interface V86EmulatorConfig {
-  wasmPath?: string;
   biosUrl?: string;
   vgaBiosUrl?: string;
   cdromUrl?: string;
@@ -19,7 +20,7 @@ export interface V86EmulatorConfig {
 
 export interface V86EmulatorProps {
   config: V86EmulatorConfig;
-  onReady?: (emulator: V86) => void;
+  onReady?: (emulator: V86Type) => void;
   onStarted?: () => void;
   onStopped?: () => void;
   onSerialOutput?: (char: string) => void;
@@ -45,7 +46,6 @@ const IMAGE_PRESETS: Record<V86ImagePreset, Partial<V86EmulatorConfig>> = {
 };
 
 const DEFAULT_CONFIG: Omit<Required<V86EmulatorConfig>, "preset"> = {
-  wasmPath: "/v86/v86.wasm",
   biosUrl: "/v86/bios/seabios.bin",
   vgaBiosUrl: "/v86/bios/vgabios.bin",
   cdromUrl: "/v86/images/alpine-virt-3.19.9-x86.iso",
@@ -57,33 +57,18 @@ const DEFAULT_CONFIG: Omit<Required<V86EmulatorConfig>, "preset"> = {
   autostart: true,
 };
 
-const V86_SCRIPT_URL = "/v86/libv86.js";
+// Lazy load V86 from npm package (only in browser)
+let V86Constructor: typeof V86Type | null = null;
 
-function loadV86Script(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (window.V86) {
-      resolve();
-      return;
-    }
-
-    const existingScript = document.querySelector(
-      `script[src="${V86_SCRIPT_URL}"]`
-    );
-    if (existingScript) {
-      existingScript.addEventListener("load", () => resolve());
-      existingScript.addEventListener("error", () =>
-        reject(new Error("Failed to load v86 script"))
-      );
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = V86_SCRIPT_URL;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load v86 script"));
-    document.head.appendChild(script);
-  });
+async function loadV86(): Promise<typeof V86Type> {
+  if (V86Constructor) {
+    return V86Constructor;
+  }
+  
+  // Dynamic import of the ESM module from v86 npm package
+  const v86Module = await import("v86");
+  V86Constructor = v86Module.V86;
+  return v86Module.V86;
 }
 
 export function V86Emulator({
@@ -94,7 +79,7 @@ export function V86Emulator({
   onSerialOutput,
   onScreenPutChar,
 }: V86EmulatorProps) {
-  const emulatorRef = useRef<V86 | null>(null);
+  const emulatorRef = useRef<V86Type | null>(null);
   const screenContainerRef = useRef<HTMLDivElement>(null);
   const isInitializedRef = useRef(false);
 
@@ -115,38 +100,33 @@ export function V86Emulator({
     isInitializedRef.current = true;
 
     try {
-      await loadV86Script();
-
-      const V86Constructor = window.V86;
-      if (!V86Constructor) {
-        throw new Error("V86 not available on window");
-      }
+      const V86 = await loadV86();
 
       const options: V86Options = {
-        wasm_path: mergedConfig.wasmPath,
+        wasm_path: v86WasmUrl,
         memory_size: mergedConfig.memorySize,
         vga_memory_size: mergedConfig.vgaMemorySize,
         screen_container: screenContainerRef.current,
-        bios: { url: mergedConfig.biosUrl },
-        vga_bios: { url: mergedConfig.vgaBiosUrl },
+        bios: { url: mergedConfig.biosUrl } as V86Image,
+        vga_bios: { url: mergedConfig.vgaBiosUrl } as V86Image,
         autostart: mergedConfig.autostart,
       };
 
       if (mergedConfig.bzimageUrl) {
-        options.bzimage = { url: mergedConfig.bzimageUrl };
+        options.bzimage = { url: mergedConfig.bzimageUrl } as V86Image;
         if (mergedConfig.cmdline) {
           options.cmdline = mergedConfig.cmdline;
         }
         options.filesystem = {};
       } else if (mergedConfig.cdromUrl) {
-        options.cdrom = { url: mergedConfig.cdromUrl };
+        options.cdrom = { url: mergedConfig.cdromUrl } as V86Image;
       }
 
       if (mergedConfig.hdaUrl) {
-        options.hda = { url: mergedConfig.hdaUrl };
+        options.hda = { url: mergedConfig.hdaUrl } as V86Image;
       }
 
-      const emulator = new V86Constructor(options);
+      const emulator = new V86(options);
       emulatorRef.current = emulator;
 
       emulator.add_listener("emulator-ready", () => {
@@ -181,12 +161,13 @@ export function V86Emulator({
       isInitializedRef.current = false;
     }
   }, [
-    mergedConfig.wasmPath,
     mergedConfig.biosUrl,
     mergedConfig.vgaBiosUrl,
     mergedConfig.cdromUrl,
-    mergedConfig.hdaUrl,    mergedConfig.bzimageUrl,
-    mergedConfig.cmdline,    mergedConfig.memorySize,
+    mergedConfig.hdaUrl,
+    mergedConfig.bzimageUrl,
+    mergedConfig.cmdline,
+    mergedConfig.memorySize,
     mergedConfig.vgaMemorySize,
     mergedConfig.autostart,
     onReady,
@@ -226,7 +207,7 @@ export function V86Emulator({
   );
 }
 
-export function useV86(emulator: V86 | null) {
+export function useV86(emulator: V86Type | null) {
   const run = useCallback(() => {
     emulator?.run();
   }, [emulator]);

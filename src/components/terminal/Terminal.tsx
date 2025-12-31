@@ -85,9 +85,7 @@ export interface TerminalConfig {
   /** JSON do filesystem 9p */
   filesystemBasefs?: string;
 
-  // Paths personalizados
-  /** Path do WASM (padrão: /v86/v86.wasm) */
-  wasmPath?: string;
+  // Paths personalizados (BIOS e imagens)
   /** Path da BIOS (padrão: /v86/bios/seabios.bin) */
   biosUrl?: string;
   /** Path da VGA BIOS (padrão: /v86/bios/vgabios.bin) */
@@ -170,18 +168,12 @@ export function Terminal({
   bzimageUrl,
   hdaUrl,
   cmdline,
-  initialStateUrl,
   memoryMB = 128,
   vgaMemoryMB = 8,
   autostart = true,
   enableKeyboard = true,
   enableMouse = true,
-  acpi,
-  network,
   display = {},
-  filesystemBaseUrl,
-  filesystemBasefs,
-  wasmPath,
   biosUrl,
   vgaBiosUrl,
 
@@ -200,7 +192,6 @@ export function Terminal({
   id,
 }: TerminalProps) {
   const [controller] = useState(() => new V86Controller());
-  const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   // Merge display config com defaults
@@ -217,7 +208,6 @@ export function Terminal({
       memorySize: memoryMB * 1024 * 1024,
       vgaMemorySize: vgaMemoryMB * 1024 * 1024,
       autostart,
-      wasmPath,
       biosUrl,
       vgaBiosUrl,
     }).filter(([_, v]) => v !== undefined)
@@ -239,7 +229,6 @@ export function Terminal({
         controller.setScreenScale(displayConfig.scale, displayConfig.scale);
       }
 
-      setIsReady(true);
       onReady?.(controller);
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));

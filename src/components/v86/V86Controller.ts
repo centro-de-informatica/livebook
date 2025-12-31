@@ -1,4 +1,4 @@
-import type { V86, V86Image } from "../../types/v86";
+import type { V86, V86Image, Event as V86Event } from "../../types/v86";
 
 /**
  * Utilitário dev-friendly para controle avançado da instância V86
@@ -8,8 +8,6 @@ export class V86Controller {
   private emulator: V86 | null = null;
   private serialBuffer: string = "";
   private serialListeners: Set<(data: string) => void> = new Set();
-  private commandQueue: Array<{ command: string; resolve: (output: string) => void; reject: (error: Error) => void }> = [];
-  private isExecutingCommand = false;
 
   constructor(emulator?: V86 | null) {
     if (emulator) {
@@ -380,7 +378,6 @@ export class V86Controller {
     const { timeout = 30000, endMarker = "___V86_CMD_DONE___" } = options;
 
     return new Promise((resolve, reject) => {
-      const startBuffer = this.serialBuffer.length;
       let output = "";
       let timeoutId: ReturnType<typeof setTimeout>;
 
@@ -432,15 +429,15 @@ export class V86Controller {
   /**
    * Adiciona listener de evento
    */
-  addListener(event: string, callback: Function): void {
-    this.emulator?.add_listener(event as any, callback);
+  addListener(event: V86Event, callback: Function): void {
+    this.emulator?.add_listener(event, callback);
   }
 
   /**
    * Remove listener de evento
    */
-  removeListener(event: string, callback: Function): void {
-    this.emulator?.remove_listener(event as any, callback);
+  removeListener(event: V86Event, callback: Function): void {
+    this.emulator?.remove_listener(event, callback);
   }
 
   /**
