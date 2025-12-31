@@ -99,7 +99,13 @@ export function V86Emulator({
   const isInitializedRef = useRef(false);
 
   const presetConfig = config.preset ? IMAGE_PRESETS[config.preset] : {};
-  const mergedConfig = { ...DEFAULT_CONFIG, ...presetConfig, ...config };
+  
+  // Filtra propriedades undefined para evitar sobrescrever defaults
+  const filteredConfig = Object.fromEntries(
+    Object.entries(config).filter(([_, v]) => v !== undefined)
+  ) as Partial<V86EmulatorConfig>;
+  
+  const mergedConfig = { ...DEFAULT_CONFIG, ...presetConfig, ...filteredConfig };
 
   const initializeEmulator = useCallback(async () => {
     if (isInitializedRef.current || !screenContainerRef.current) {
@@ -203,9 +209,19 @@ export function V86Emulator({
   }, [initializeEmulator]);
 
   return (
-    <div ref={screenContainerRef}>
+    <div 
+      ref={screenContainerRef}
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#000",
+      }}
+    >
       <div style={{ whiteSpace: "pre", font: "14px monospace", lineHeight: "14px" }}></div>
-      <canvas style={{ display: "none" }}></canvas>
+      <canvas style={{ display: "block" }}></canvas>
     </div>
   );
 }

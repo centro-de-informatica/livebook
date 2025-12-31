@@ -1,51 +1,21 @@
 ---
-import { V86Emulator } from "../components/v86";
+import RootLayout from "../layouts/RootLayout.astro";
+import { Terminal } from "../components/terminal";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Linux Sandbox</title>
-		<style>
-			body {
-				margin: 0;
-				padding: 20px;
-				background-color: #1a1a1a;
-				color: #fff;
-				font-family: system-ui, sans-serif;
-			}
-			#emulator-container {
-				background-color: #000;
-				padding: 10px;
-				border-radius: 4px;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="emulator-container">
-			<!-- 
-				Presets disponíveis: "alpine" | "buildroot" | "linux4"
-				
-				alpine: Alpine Linux (ISO ~60MB, sistema completo)
-				buildroot: BusyBox/Buildroot (bzImage ~10MB, boot rápido)
-				linux4: Linux4 ISO (ISO ~7.7MB, BusyBox)
-				
-				Uso com preset:
-				<V86Emulator config={{ preset: "buildroot" }} />
-				
-				Ou configuração manual:
-				<V86Emulator config={{ cdromUrl: "/v86/images/alpine-virt-3.19.9-x86.iso" }} />
-				<V86Emulator config={{ bzimageUrl: "/v86/images/buildroot-bzimage68.bin", cmdline: "..." }} />
-			-->
-			<V86Emulator
-				client:only="react"
-				config={{
-					preset: "alpine",
-				}}
-			/>
-		</div>
-	</body>
-</html>
+<RootLayout title="Linux Sandbox">
+	<Terminal
+		client:only="react"
+		preset="buildroot"
+		display={{
+			width: 720,
+			height: 400,
+			borderRadius: 8,
+		}}
+		onReady={(controller) => {
+			console.log("Terminal pronto!", controller);
+			// Expor controller globalmente para debug
+			(window as any).terminalController = controller;
+		}}
+	/>
+</RootLayout>

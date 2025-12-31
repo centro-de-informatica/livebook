@@ -104,20 +104,72 @@ export declare class V86 {
   save_state(): Promise<ArrayBuffer>;
   get_instruction_counter(): number;
   is_running(): boolean;
+
+  // Floppy
   set_fda(image: V86Image): Promise<void>;
   eject_fda(): void;
+
+  // CD-ROM
   set_cdrom(image: V86Image): Promise<void>;
   eject_cdrom(): void;
+
+  // Keyboard
   keyboard_send_scancodes(codes: number[]): void;
   keyboard_send_keys(codes: number[]): void;
   keyboard_send_text(text: string): void;
+  keyboard_set_enabled(enabled: boolean): void;
+
+  // Mouse
+  mouse_set_enabled(enabled: boolean): void;
+  lock_mouse(): void;
+
+  // Screen
   screen_make_screenshot(): HTMLElement;
+  screen_set_scale(sx: number, sy: number): void;
+  screen_go_fullscreen(): void;
+  /** Internal: acesso ao screen adapter para funcionalidades avançadas */
+  screen_adapter?: {
+    get_text_screen(): string[];
+    get_text_row(y: number): string;
+    set_scale(sx: number, sy: number): void;
+    make_screenshot(): HTMLElement;
+  };
+
+  // Serial
   serial0_send(data: string): void;
   serial_send_bytes(serial: number, data: Uint8Array): void;
+  serial_set_modem_status(serial: number, status: number): void;
+  serial_set_carrier_detect(serial: number, status: boolean): void;
+  serial_set_ring_indicator(serial: number, status: boolean): void;
+  serial_set_data_set_ready(serial: number, status: boolean): void;
+  serial_set_clear_to_send(serial: number, status: boolean): void;
+
+  // Filesystem (9p)
   create_file(file: string, data: Uint8Array): Promise<void>;
   read_file(file: string): Promise<Uint8Array>;
+  /** Internal: acesso direto ao filesystem 9p */
+  fs9p?: {
+    read_file(path: string): Promise<Uint8Array | null>;
+    SearchPath(path: string): { parentid: number; id: number };
+    CreateBinaryFile(name: string, parentId: number, data: Uint8Array): Promise<void>;
+  };
+
+  // Memory
   read_memory(offset: number, length: number): Uint8Array;
   write_memory(blob: Uint8Array | number[], offset: number): void;
+
+  // Advanced: aguarda texto na tela VGA
+  wait_until_vga_screen_contains(
+    expected: string | RegExp | string[],
+    options?: { timeout_msec?: number }
+  ): Promise<boolean>;
+
+  // Internal: bus de eventos
+  bus?: {
+    register(event: string, listener: Function, context?: any): void;
+    unregister(event: string, listener: Function): void;
+    send(event: string, data?: any): void;
+  };
 }
 
 export default V86;
