@@ -21,9 +21,9 @@ export type { BlockquoteProps } from "./Blockquote";
 export { SmallCaps, Abbr } from "./Caps";
 export type { SmallCapsProps, AbbrProps } from "./Caps";
 
-// Code
-export { InlineCode, CodeBlock } from "./Code";
-export type { InlineCodeProps, CodeBlockProps } from "./Code";
+// CodeEditorBlock
+export { CodeEditorBlock, InlineCode } from "./CodeEditorBlock";
+export type { CodeEditorBlockProps, InlineCodeProps } from "./CodeEditorBlock";
 
 // Figure
 export { Figure } from "./Figure";

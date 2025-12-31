@@ -22,7 +22,7 @@ import {
   Rule,
   Aside,
   InlineCode,
-  CodeBlock,
+  CodeEditorBlock,
   Abbr,
   SmallCaps,
   Figure,
@@ -231,12 +231,20 @@ import {
         For longer code blocks, use proper indentation and maintain consistent spacing:
       </Paragraph>
 
-      <CodeBlock language="css">{`:root {
+      <CodeEditorBlock
+        client:only="react"
+        initialValue={`:root {
   --pt-font-serif: "Source Serif 4", Georgia, serif;
   --pt-font-sans: "Source Sans 3", Helvetica, sans-serif;
   --pt-line-height: 1.4;
   --pt-indent: 1.5em;
-}`}</CodeBlock>
+}`}
+        language="css"
+        theme="oneDark"
+        lineNumbers={true}
+        readOnly={true}
+        height="180px"
+      />
 
       <Paragraph>
         The code block above demonstrates how to set up <Abbr title="Cascading Style Sheets">CSS</Abbr> custom 
@@ -249,7 +257,9 @@ import {
         variant. On large screens, it expands to occupy the full available space:
       </Paragraph>
 
-      <CodeBlock language="css" wide>{`/* Responsive typography system with fluid scaling */
+      <CodeEditorBlock
+        client:only="react"
+        initialValue={`/* Responsive typography system with fluid scaling */
 @media (min-width: 75em) {
   .pt-article-header {
     position: absolute;
@@ -267,7 +277,14 @@ import {
     right: calc(-1 * var(--pt-aside-width) - var(--pt-aside-gap));
     text-align: left;
   }
-}`}</CodeBlock>
+}`}
+        language="css"
+        theme="oneDark"
+        lineNumbers={true}
+        readOnly={true}
+        wide={true}
+        height="380px"
+      />
 
       <Heading level={2}>Bulleted and Numbered Lists</Heading>
 

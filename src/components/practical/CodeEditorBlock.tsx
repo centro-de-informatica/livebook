@@ -1,17 +1,6 @@
-import React from "react";
 import type { CSSProperties, ReactNode } from "react";
-
-export interface CodeBlockProps {
-  children: ReactNode;
-  /** Language for syntax highlighting */
-  language?: string;
-  /** Expand beyond main content to full width (aside + main + aside) on large screens */
-  wide?: boolean;
-  /** Additional className */
-  className?: string;
-  /** Inline style override */
-  style?: CSSProperties;
-}
+import { CodeEditor } from "../code-editor";
+import type { CodeEditorProps } from "../code-editor";
 
 export interface InlineCodeProps {
   children: ReactNode;
@@ -25,7 +14,7 @@ export interface InlineCodeProps {
  * Inline code following Practical Typography principles
  *
  * - Monospaced font
- * - Reduced size (0.9em)
+ * - Reduced size (0.88em)
  * - Subtle background
  */
 export function InlineCode({ children, className = "", style }: InlineCodeProps) {
@@ -45,52 +34,49 @@ export function InlineCode({ children, className = "", style }: InlineCodeProps)
   );
 }
 
+export interface CodeEditorBlockProps extends Omit<CodeEditorProps, "style" | "className"> {
+  /** Expand beyond main content to full width (aside + main + aside) on large screens */
+  wide?: boolean;
+  /** Additional className */
+  className?: string;
+  /** Inline style override */
+  style?: CSSProperties;
+}
+
 /**
- * Code block following Practical Typography principles
+ * Code editor block following Practical Typography proportions
  *
- * - Monospaced font
- * - Left border like blockquotes
- * - Proper line height for code
- * - Subtle background
+ * - Left border like blockquotes (when not wide)
+ * - Proper spacing
+ * - Wide mode for full-width layouts
  */
-export function CodeBlock({
-  children,
-  language,
+export function CodeEditorBlock({
   wide = false,
   className = "",
   style,
-}: CodeBlockProps) {
+  height = "400px",
+  ...editorProps
+}: CodeEditorBlockProps) {
   const baseStyle: CSSProperties = {
     marginTop: "var(--pt-space-lg)",
     marginBottom: "var(--pt-space-lg)",
     marginLeft: wide ? 0 : "2em",
-    padding: "var(--pt-space-md)",
-    paddingLeft: "1em",
-    backgroundColor: "var(--pt-color-code-bg)",
-    borderLeft: wide ? "none" : "2px solid var(--pt-color-rule)",
-    overflowX: "auto",
+    overflow: "hidden",
     lineHeight: 1.45,
     ...style,
   };
 
-  const codeStyle: CSSProperties = {
-    fontFamily: "var(--pt-font-mono)",
-    fontSize: "0.88em",
-    background: "none",
-    padding: 0,
-  };
-
-  const wideClass = wide ? "pt-code-block--wide" : "";
+  const wideClass = wide ? "pt-code-editor-block--wide" : "";
 
   return (
     <>
       {wide && (
         <style>{`
-          .pt-code-block--wide {
+          .pt-code-editor-block--wide {
             position: relative;
           }
           @media (min-width: 75em) {
-            .pt-code-block--wide {
+            .pt-code-editor-block--wide {
               --wide-extra: calc(var(--pt-aside-width, 10rem) + var(--pt-aside-gap, 1.5rem));
               --wide-width: calc(100% + var(--wide-extra) * 2);
               width: var(--wide-width) !important;
@@ -103,15 +89,14 @@ export function CodeBlock({
           }
         `}</style>
       )}
-      <pre
-        className={`pt-code-block ${wideClass} ${className}`.trim()}
+      <div
+        className={`pt-code-editor-block ${wideClass} ${className}`.trim()}
         style={baseStyle}
-        data-language={language}
       >
-        <code style={codeStyle}>{children}</code>
-      </pre>
+        <CodeEditor height={height} {...editorProps} />
+      </div>
     </>
   );
 }
 
-export default CodeBlock;
+export default CodeEditorBlock;
