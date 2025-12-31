@@ -1,0 +1,169 @@
+---
+/**
+ * PracticalLayout.astro
+ * Layout following Practical Typography principles
+ * https://practicaltypography.com
+ */
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
+}
+
+const { title = "Practical Typography", description = "", lang = "en" } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    {description && <meta name="description" content={description} />}
+    <title>{title}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Code+Pro:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="pt-page">
+      <main class="pt-main">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  /* CSS Variables - Practical Typography Style */
+  :root {
+    --pt-font-serif: "Source Serif 4", "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    --pt-font-sans: "Source Sans 3", "Concourse", "Gill Sans", "Gill Sans MT", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --pt-font-mono: "Source Code Pro", "Triplicate", "Consolas", "Monaco", "Andale Mono", monospace;
+    
+    --pt-color-text: #1a1a1a;
+    --pt-color-text-muted: #667;
+    --pt-color-background: #fffff8;
+    --pt-color-link: inherit;
+    --pt-color-link-hover: #777;
+    --pt-color-border: #ccc;
+    --pt-color-rule: #333;
+    --pt-color-aside-border: #ccc;
+    --pt-color-code-bg: #f5f5f0;
+    
+    --pt-line-height: 1.4;
+    --pt-line-height-tight: 1.25;
+    --pt-line-height-loose: 1.5;
+    
+    --pt-space-xs: 0.25rem;
+    --pt-space-sm: 0.5rem;
+    --pt-space-md: 1rem;
+    --pt-space-lg: 1.5rem;
+    --pt-space-xl: 2rem;
+    --pt-space-xxl: 2.5rem;
+    
+    --pt-indent: 1.5em;
+    --pt-aside-width: 7.5rem;
+    --pt-aside-gap: 1.5rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --pt-color-text: #e0e0d8;
+      --pt-color-text-muted: #999;
+      --pt-color-background: #1a1a18;
+      --pt-color-link: inherit;
+      --pt-color-link-hover: #aaa;
+      --pt-color-border: #444;
+      --pt-color-rule: #666;
+      --pt-color-aside-border: #555;
+      --pt-color-code-bg: #252520;
+    }
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 
+   * Responsive font sizing following Practical Typography
+   * Scale font-size and element width at the same rate using vw
+   * This maintains consistent line length (45-90 chars) across viewports
+   */
+  html {
+    font-size: clamp(16px, 2.2vw, 22px);
+    height: 100%;
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+
+  body {
+    font-family: var(--pt-font-serif);
+    font-size: 1rem;
+    line-height: var(--pt-line-height);
+    font-variant-numeric: oldstyle-nums;
+    color: var(--pt-color-text);
+    background-color: var(--pt-color-background);
+    min-height: 100%;
+    text-align: left;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  .pt-page {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 42em;
+    min-height: 100%;
+    position: relative;
+    padding: 0 1.5em;
+  }
+
+  .pt-main {
+    padding: 3em 0 6em 0;
+    position: relative;
+  }
+
+  /* Article header responsive behavior */
+  @media (min-width: 50em) {
+    .pt-article-header {
+      float: left;
+      width: auto;
+      max-width: 10rem;
+      margin-right: 1.5rem;
+      text-align: right;
+    }
+    
+    .pt-article-content {
+      overflow: hidden; /* clearfix for float */
+    }
+  }
+
+  @media (max-width: 49.99em) {
+    .pt-article-header {
+      width: 100%;
+      max-width: none;
+      text-align: left;
+      margin-bottom: var(--pt-space-lg);
+    }
+  }
+
+  @media all and (max-width: 30em) {
+    .pt-page {
+      padding: 0 1em;
+    }
+
+    .pt-main {
+      padding: 2em 0 4em 0;
+    }
+  }
+</style>
