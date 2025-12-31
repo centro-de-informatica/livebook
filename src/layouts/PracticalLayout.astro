@@ -68,7 +68,7 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
     --pt-space-xxl: 2.5rem;
     
     --pt-indent: 1.5em;
-    --pt-aside-width: 7.5rem;
+    --pt-aside-width: 10rem;
     --pt-aside-gap: 1.5rem;
   }
 
@@ -98,7 +98,7 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
    * This maintains consistent line length (45-90 chars) across viewports
    */
   html {
-    font-size: clamp(16px, 2.2vw, 22px);
+    font-size: clamp(15px, 2vw, 20px);
     height: 100%;
     -webkit-font-smoothing: subpixel-antialiased;
     text-rendering: optimizeLegibility;
@@ -119,37 +119,45 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
   }
 
   .pt-page {
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    max-width: 42em;
     min-height: 100%;
     position: relative;
-    padding: 0 1.5em;
+    padding: 0 1rem;
+    box-sizing: border-box;
   }
 
   .pt-main {
+    width: 100%;
+    max-width: 35em;
     padding: 3em 0 6em 0;
     position: relative;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 
-  /* Article header responsive behavior */
-  @media (min-width: 50em) {
-    .pt-article-header {
-      float: left;
-      width: auto;
-      max-width: 10rem;
-      margin-right: 1.5rem;
-      text-align: right;
+  /* Wide screens: allow space for asides */
+  @media (min-width: 75em) {
+    .pt-page {
+      padding-left: calc(var(--pt-aside-width) + var(--pt-aside-gap) + 2rem);
+      padding-right: calc(var(--pt-aside-width) + var(--pt-aside-gap) + 2rem);
     }
     
-    .pt-article-content {
-      overflow: hidden; /* clearfix for float */
+    .pt-article-header {
+      position: absolute;
+      left: calc(-1 * var(--pt-aside-width) - var(--pt-aside-gap));
+      width: var(--pt-aside-width);
+      text-align: right;
     }
   }
 
-  @media (max-width: 49.99em) {
+  /* Medium and small screens: inline header */
+  @media (max-width: 74.99em) {
     .pt-article-header {
+      position: relative;
+      left: auto;
       width: 100%;
       max-width: none;
       text-align: left;
@@ -157,9 +165,10 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
     }
   }
 
-  @media all and (max-width: 30em) {
+  /* Small screens: tighter padding */
+  @media (max-width: 30em) {
     .pt-page {
-      padding: 0 1em;
+      padding: 0 0.75rem;
     }
 
     .pt-main {

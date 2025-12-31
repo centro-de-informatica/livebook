@@ -2,6 +2,8 @@ import React, { type CSSProperties, type ReactNode } from "react";
 
 export interface AsideProps {
   children: ReactNode;
+  /** Position of the aside: 'left' (default) or 'right' */
+  position?: 'left' | 'right';
   /** Additional className */
   className?: string;
   /** Inline style override */
@@ -17,20 +19,29 @@ export interface AsideProps {
  */
 export function Aside({
   children,
+  position = 'left',
   className = "",
   style,
 }: AsideProps) {
+  const positionClass = position === 'right' ? 'pt-aside--right' : 'pt-aside--left';
+  
   return (
     <>
       <style>{`
         .pt-aside {
           display: block;
           position: absolute;
-          left: 2.5rem;
           width: var(--pt-aside-width, 7.5rem);
-          text-align: right;
           margin-bottom: 1rem;
           font-variant-numeric: normal;
+        }
+        .pt-aside--left {
+          left: calc(-1 * var(--pt-aside-width, 7.5rem) - var(--pt-aside-gap, 1.5rem));
+          text-align: right;
+        }
+        .pt-aside--right {
+          right: calc(-1 * var(--pt-aside-width, 7.5rem) - var(--pt-aside-gap, 1.5rem));
+          text-align: left;
         }
         .pt-aside,
         .pt-aside p {
@@ -56,37 +67,39 @@ export function Aside({
         .pt-aside strong {
           font-weight: 600;
         }
-        @media all and (min-width: 1200px) {
-          .pt-aside {
-            left: 0;
-            width: calc(var(--pt-aside-width, 7.5rem) + 2.5rem);
-          }
-        }
-        @media all and (max-width: 520px) {
+        /* Medium screens and below: inline asides */
+        @media (max-width: 74.99em) {
           .pt-aside {
             position: relative;
-            left: 0;
+            left: auto;
+            right: auto;
             width: 100%;
             text-align: left;
-            background: #fefefe;
-            padding: 0.3rem 0.5rem;
+            background: var(--pt-color-background, #fffff8);
+            padding: 0.5rem 0.75rem;
             border: 1px solid var(--pt-color-border, #ccc);
-            border-left: 3px solid var(--pt-color-border, #ccc);
             margin-bottom: 1em;
+            margin-top: 0.5em;
+          }
+          .pt-aside--left {
+            border-left: 3px solid var(--pt-color-border, #ccc);
+          }
+          .pt-aside--right {
+            border-right: 3px solid var(--pt-color-border, #ccc);
           }
         }
         @media (prefers-color-scheme: dark) {
           .pt-aside {
             background: transparent;
           }
-          @media all and (max-width: 520px) {
+          @media (max-width: 74.99em) {
             .pt-aside {
-              background: #252520;
+              background: var(--pt-color-code-bg, #252520);
             }
           }
         }
       `}</style>
-      <aside className={`pt-aside ${className}`.trim()} style={style}>
+      <aside className={`pt-aside ${positionClass} ${className}`.trim()} style={style}>
         {children}
       </aside>
     </>

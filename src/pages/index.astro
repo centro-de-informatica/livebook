@@ -70,6 +70,19 @@ import {
         />
       </Figure>
 
+      <Paragraph>
+        For images and diagrams that benefit from additional space, use the wide variant. 
+        On large screens, it extends beyond the main content area:
+      </Paragraph>
+
+      <Figure wide caption="A wide figure that extends to the full available width on large screens, providing more detail for complex diagrams or imagery.">
+        <img 
+          src="https://placehold.co/1200x400/f0f0e8/1a1a1a?text=Wide+Figure+Example" 
+          alt="Wide figure demonstration"
+          style={{ maxWidth: "100%", height: "auto", display: "block" }}
+        />
+      </Figure>
+
       <Heading level={2}>Line Spacing</Heading>
 
       <Paragraph>
@@ -169,7 +182,7 @@ import {
 
       <Heading level={2}>Justified Text</Heading>
 
-      <Aside>
+      <Aside position="right">
         Exceptions exist. For comprehensive explanations, consult <em>Garner&#8217;s 
         Modern English Usage</em> (see <SmallCaps>bibliography</SmallCaps>), the authority 
         on how to use semicolons, colons, other punctuation marks, and the rest of the 
@@ -230,6 +243,31 @@ import {
         properties for a typography system. Notice the left border that visually connects 
         it to block quotations.
       </Paragraph>
+
+      <Paragraph>
+        For more complex code examples that benefit from additional width, use the wide 
+        variant. On large screens, it expands to occupy the full available space:
+      </Paragraph>
+
+      <CodeBlock language="css" wide>{`/* Responsive typography system with fluid scaling */
+@media (min-width: 75em) {
+  .pt-article-header {
+    position: absolute;
+    left: calc(-1 * var(--pt-aside-width) - var(--pt-aside-gap));
+    width: var(--pt-aside-width);
+    text-align: right;
+  }
+  
+  .pt-aside--left {
+    left: calc(-1 * var(--pt-aside-width) - var(--pt-aside-gap));
+    text-align: right;
+  }
+  
+  .pt-aside--right {
+    right: calc(-1 * var(--pt-aside-width) - var(--pt-aside-gap));
+    text-align: left;
+  }
+}`}</CodeBlock>
 
       <Heading level={2}>Bulleted and Numbered Lists</Heading>
 

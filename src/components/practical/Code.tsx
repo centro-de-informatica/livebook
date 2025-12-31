@@ -5,6 +5,8 @@ export interface CodeBlockProps {
   children: ReactNode;
   /** Language for syntax highlighting */
   language?: string;
+  /** Expand beyond main content to full width (aside + main + aside) on large screens */
+  wide?: boolean;
   /** Additional className */
   className?: string;
   /** Inline style override */
@@ -54,16 +56,18 @@ export function InlineCode({ children, className = "", style }: InlineCodeProps)
 export function CodeBlock({
   children,
   language,
+  wide = false,
   className = "",
   style,
 }: CodeBlockProps) {
-  const preStyle: CSSProperties = {
-    margin: "var(--pt-space-lg) 0",
-    marginLeft: "2em",
+  const baseStyle: CSSProperties = {
+    marginTop: "var(--pt-space-lg)",
+    marginBottom: "var(--pt-space-lg)",
+    marginLeft: wide ? 0 : "2em",
     padding: "var(--pt-space-md)",
     paddingLeft: "1em",
     backgroundColor: "var(--pt-color-code-bg)",
-    borderLeft: "2px solid var(--pt-color-rule)",
+    borderLeft: wide ? "none" : "2px solid var(--pt-color-rule)",
     overflowX: "auto",
     lineHeight: 1.45,
     ...style,
@@ -76,14 +80,37 @@ export function CodeBlock({
     padding: 0,
   };
 
+  const wideClass = wide ? "pt-code-block--wide" : "";
+
   return (
-    <pre
-      className={`pt-code-block ${className}`}
-      style={preStyle}
-      data-language={language}
-    >
-      <code style={codeStyle}>{children}</code>
-    </pre>
+    <>
+      {wide && (
+        <style>{`
+          .pt-code-block--wide {
+            position: relative;
+          }
+          @media (min-width: 75em) {
+            .pt-code-block--wide {
+              --wide-extra: calc(var(--pt-aside-width, 10rem) + var(--pt-aside-gap, 1.5rem));
+              --wide-width: calc(100% + var(--wide-extra) * 2);
+              width: var(--wide-width) !important;
+              margin-left: calc(-1 * var(--wide-extra)) !important;
+              margin-right: calc(-1 * var(--wide-extra)) !important;
+              max-width: calc(100vw - 2rem);
+              box-sizing: border-box;
+              border-radius: 3px;
+            }
+          }
+        `}</style>
+      )}
+      <pre
+        className={`pt-code-block ${wideClass} ${className}`.trim()}
+        style={baseStyle}
+        data-language={language}
+      >
+        <code style={codeStyle}>{children}</code>
+      </pre>
+    </>
   );
 }
 
