@@ -1,5 +1,5 @@
 import { Terminal } from "./Terminal";
-import type { V86Controller } from "../v86/V86Controller";
+import type { V86Controller } from "../v86-wrapper/V86Controller";
 
 /**
  * Demo do Terminal com callbacks funcionais

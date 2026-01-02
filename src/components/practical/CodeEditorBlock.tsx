@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
-import { CodeEditor } from "../code-editor";
-import type { CodeEditorProps } from "../code-editor";
+import { CodeEditor } from "../codemirror-wrapper";
+import type { CodeEditorProps } from "../codemirror-wrapper";
 
 export interface InlineCodeProps {
   children: ReactNode;

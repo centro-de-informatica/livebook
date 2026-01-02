@@ -27,6 +27,15 @@ import {
   SmallCaps,
   Figure,
 } from "../components/practical";
+import {
+  RoughBox,
+  RoughCircle,
+  RoughEllipse,
+  RoughLine,
+  RoughArrow,
+  RoughDiagram,
+  RoughArrayBoxes,
+} from "../components/shapes";
 ---
 
 <PracticalLayout 
@@ -474,6 +483,119 @@ import {
         arbitrary rules but time-tested guidelines that help create documents that are 
         both beautiful and readable. Good typography is ultimately about 
         respect&#8212;respect for your readers and for the craft of visual communication.
+      </Paragraph>
+
+      <Heading level={2}>Hand-Drawn Elements</Heading>
+
+      <Paragraph>
+        Sometimes a document benefits from a more relaxed, sketchy aesthetic. Hand-drawn 
+        elements can add personality and visual interest without compromising readability. 
+        These sketchy graphics are created using <InlineCode>rough.js</InlineCode>, a 
+        library that renders primitives in a hand-drawn style.
+      </Paragraph>
+
+      <Figure caption="Basic geometric shapes rendered with a sketchy, hand-drawn appearance.">
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center', padding: '2rem 0' }}>
+          <RoughBox 
+            client:only="react"
+            width={120}
+            height={120}
+            fill="rgba(255, 100, 100, 0.3)"
+            stroke="#d63031"
+            strokeWidth={2}
+            roughness={1.5}
+          />
+          <RoughCircle 
+            client:only="react"
+            diameter={110}
+            fill="rgba(100, 100, 255, 0.3)"
+            stroke="#0984e3"
+            strokeWidth={2}
+            roughness={1.5}
+          />
+          <RoughEllipse 
+            client:only="react"
+            width={140}
+            height={100}
+            fill="rgba(100, 255, 100, 0.3)"
+            stroke="#00b894"
+            strokeWidth={2}
+            roughness={1.5}
+          />
+        </div>
+      </Figure>
+
+      <Paragraph>
+        Lines and arrows can be used to connect ideas or draw attention to specific 
+        elements. The sketchy style makes them feel less formal and more approachable.
+      </Paragraph>
+
+      <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', padding: '1rem 0' }}>
+        <RoughLine 
+          client:only="react"
+          x1={10}
+          y1={50}
+          x2={150}
+          y2={50}
+          stroke="#2d3436"
+          strokeWidth={2}
+          roughness={1.2}
+        />
+        <RoughArrow 
+          client:only="react"
+          x1={10}
+          y1={50}
+          x2={150}
+          y2={50}
+          stroke="#6c5ce7"
+          strokeWidth={2}
+          roughness={1.2}
+          arrowSize={12}
+        />
+      </div>
+
+      <Paragraph>
+        For more complex compositions, you can combine multiple rough elements into a 
+        single custom sketch. This flexibility allows you to create diagrams, 
+        illustrations, and visual aids that maintain a consistent hand-drawn aesthetic.
+      </Paragraph>
+
+      <Figure caption="A custom sketch combining multiple rough.js primitives to create a simple diagram.">
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '1rem 0' }}>
+          <RoughDiagram
+            client:only="react"
+            width={400}
+            height={200}
+          />
+        </div>
+      </Figure>
+
+      <Figure caption="An animated array visualization where each box is highlighted in sequence every second.">
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '1rem 0' }}>
+          <RoughArrayBoxes
+            client:only="react"
+            count={6}
+            boxWidth={60}
+            boxHeight={60}
+            gap={12}
+            interval={1000}
+          />
+        </div>
+      </Figure>
+
+      <Paragraph>
+        While these sketchy elements should be used sparingly in formal documents, they 
+        can be effective for presentations, educational materials, or any context where a 
+        more casual tone is appropriate. The key is to use them purposefully, not as a 
+        substitute for clear thinking and good design.
+      </Paragraph>
+
+      <Rule sectionBreak />
+
+      <Paragraph noIndent>
+        Typography is a craft that balances form and function. Whether using precise 
+        digital letterforms or hand-drawn sketches, the goal remains the same: to 
+        communicate clearly and beautifully with your readers.
       </Paragraph>
     </ArticleContent>
   </Article>

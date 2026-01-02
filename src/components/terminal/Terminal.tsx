@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, type ReactNode, type CSSProperties } from "react";
-import { V86Emulator, type V86EmulatorConfig, type V86ImagePreset, type V86NetworkConfig, type V86FilesystemConfig } from "../v86/V86Emulator";
-import { V86Controller, type WaitForScreenOptions, type ExecuteCommandOptions } from "../v86/V86Controller";
+import { V86Emulator, type V86EmulatorConfig, type V86ImagePreset, type V86NetworkConfig, type V86FilesystemConfig } from "../v86-wrapper/V86Emulator";
+import { V86Controller, type WaitForScreenOptions, type ExecuteCommandOptions } from "../v86-wrapper/V86Controller";
 import type { V86 } from "../../types/v86";
 
 // ============================================

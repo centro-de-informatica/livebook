@@ -38,7 +38,7 @@ export {
   type WaitForScreenOptions,
   type ExecuteCommandOptions,
   type DownloadProgress,
-} from "../v86/V86Controller";
+} from "../v86-wrapper/V86Controller";
 
 // Re-export v86 types
 export type { V86, V86Options, V86Image, Event as V86Event } from "../../types/v86";
