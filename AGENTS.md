@@ -45,7 +45,7 @@ Wrappers JAMAIS devem conter logica de negocio especifica do projeto.
 Padrao obrigatorio para wrappers de bibliotecas externas:
 
 ```
-src/components/<nome-ou-ref-a-lib>/
+src/components/<nome-ou-ref-a-lib>-wrapper/
   <nome-ou-ref-a-lib>.tsx    # Core thin wrapper
   use<nome-ou-ref-a-lib>.ts  # Hook customizado (obrigatorio para wrappers)
   index.ts                   # Exports
@@ -65,21 +65,21 @@ src/components/<nome-ou-ref-a-lib>/
 #### Estrutura
 
 ```
-src/components/v86/
+src/components/v86-wrapper/
   V86Emulator.tsx     # Core thin wrapper
   useV86.ts           # Hook customizado (obrigatorio)
   V86Controller.ts    # Controller para gerenciar comunicacao
   index.ts            # Exports
 ```
 
-#### src/components/v86/V86Emulator.tsx
+#### src/components/v86-wrapper/V86Emulator.tsx
 
 - Este componente encapsula o emulador v86
 - Funciona como uma leve camada (thin wrapper) de abstracao
 - Facilita o uso do v86 no projeto Astro
 - Adequa o v86 ao lifecycle do React
 
-#### src/components/v86/useV86.ts
+#### src/components/v86-wrapper/useV86.ts
 
 - Hook customizado obrigatorio para o wrapper v86
 - Responsabilidades:
@@ -88,7 +88,7 @@ src/components/v86/
   - Fornecer funcoes utilitarias para controle do emulador
 - Mantenha o hook simples e composavel
 
-#### src/components/v86/V86Controller.ts
+#### src/components/v86-wrapper/V86Controller.ts
 
 - Este controller gerencia a comunicacao entre o componente V86Emulator e o restante do sistema
 - Responsabilidades:
@@ -105,13 +105,13 @@ src/components/v86/
 #### Estrutura
 
 ```
-src/components/code-editor/
+src/components/codemirror-wrapper/
   CodeEditor.tsx      # Core thin wrapper
   useCodeEditor.ts    # Hook customizado (obrigatorio)
   index.ts            # Exports
 ```
 
-#### src/components/code-editor/CodeEditor.tsx
+#### src/components/codemirror-wrapper/CodeEditor.tsx
 
 - Este componente encapsula o CodeMirror (https://codemirror.net/)
 - Fornece uma interface de editor de codigo dentro do projeto Astro
@@ -125,7 +125,7 @@ src/components/code-editor/
 - Torne o componente facilmente configuravel
 - Ative ou desative as features do editor via props de modo opt-in
 
-#### src/components/code-editor/useCodeEditor.ts
+#### src/components/codemirror-wrapper/useCodeEditor.ts
 
 - Hook customizado obrigatorio para o wrapper CodeMirror
 - Responsabilidades:
@@ -146,14 +146,14 @@ src/components/code-editor/
 #### Estrutura
 
 ```
-src/components/handmade/
+src/components/rough-wrapper/
   RoughCanvas.tsx     # Core thin wrapper
   RoughSvg.tsx        # Core thin wrapper SVG
   useRough.ts         # Hook customizado (obrigatorio)
   index.ts            # Exports
 ```
 
-#### src/components/handmade/RoughCanvas.tsx
+#### src/components/rough-wrapper/RoughCanvas.tsx
 
 - Este componente encapsula o RoughJS
 - Funciona como uma leve camada (thin wrapper) de abstracao
@@ -173,7 +173,7 @@ src/components/handmade/
 - Use `useEffect` para inicializar o rough canvas apos o mount
 - Limpe a instancia rough no cleanup do useEffect
 
-#### src/components/handmade/useRough.ts
+#### src/components/rough-wrapper/useRough.ts
 
 - Hook customizado obrigatorio para o wrapper RoughJS
 - Responsabilidades:
