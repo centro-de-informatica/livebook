@@ -5,7 +5,7 @@
  */
 
 import { useRef, useEffect } from 'react';
-import { useRoughCanvas, type RoughOptions } from '../rough-wrapper';
+import { useRoughCanvas } from '../rough-wrapper';
 
 export interface RoughLineProps {
   x1?: number;
@@ -35,12 +35,12 @@ export function RoughLine({
 
   useEffect(() => {
     if (!isReady) return;
-    
+
     clear();
-    
+
     const offsetX = padding - Math.min(x1, x2);
     const offsetY = padding - Math.min(y1, y2);
-    
+
     line(x1 + offsetX, y1 + offsetY, x2 + offsetX, y2 + offsetY, {
       stroke,
       strokeWidth,

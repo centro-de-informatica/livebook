@@ -1,14 +1,37 @@
 import { useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
-import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, placeholder as placeholderExt } from '@codemirror/view';
+import {
+  EditorView,
+  keymap,
+  lineNumbers,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  highlightSpecialChars,
+  drawSelection,
+  dropCursor,
+  rectangularSelection,
+  crosshairCursor,
+  placeholder as placeholderExt,
+} from '@codemirror/view';
 import { EditorState, Compartment } from '@codemirror/state';
 import type { Extension } from '@codemirror/state';
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
-import { bracketMatching, indentOnInput, syntaxHighlighting, defaultHighlightStyle, foldGutter, foldKeymap, HighlightStyle } from '@codemirror/language';
-import { closeBrackets, closeBracketsKeymap, autocompletion, completionKeymap } from '@codemirror/autocomplete';
+import {
+  bracketMatching,
+  indentOnInput,
+  syntaxHighlighting,
+  defaultHighlightStyle,
+  foldGutter,
+  foldKeymap,
+} from '@codemirror/language';
+import {
+  closeBrackets,
+  closeBracketsKeymap,
+  autocompletion,
+  completionKeymap,
+} from '@codemirror/autocomplete';
 import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
 import { lintKeymap } from '@codemirror/lint';
 import { oneDark } from '@codemirror/theme-one-dark';
-import { tags } from '@lezer/highlight';
 
 // Language imports
 import { javascript } from '@codemirror/lang-javascript';
@@ -18,7 +41,17 @@ import { css } from '@codemirror/lang-css';
 import { json } from '@codemirror/lang-json';
 import { markdown } from '@codemirror/lang-markdown';
 
-export type SupportedLanguage = 'javascript' | 'typescript' | 'jsx' | 'tsx' | 'python' | 'html' | 'css' | 'json' | 'markdown' | 'plaintext';
+export type SupportedLanguage =
+  | 'javascript'
+  | 'typescript'
+  | 'jsx'
+  | 'tsx'
+  | 'python'
+  | 'html'
+  | 'css'
+  | 'json'
+  | 'markdown'
+  | 'plaintext';
 
 export type ThemeType = 'light' | 'dark' | 'oneDark';
 
@@ -121,71 +154,77 @@ function getLanguageExtension(language: SupportedLanguage): Extension {
 }
 
 function createLightTheme(): Extension {
-  return EditorView.theme({
-    '&': {
-      backgroundColor: '#ffffff',
-      color: '#24292e',
+  return EditorView.theme(
+    {
+      '&': {
+        backgroundColor: '#ffffff',
+        color: '#24292e',
+      },
+      '.cm-content': {
+        caretColor: '#24292e',
+      },
+      '.cm-cursor, .cm-dropCursor': {
+        borderLeftColor: '#24292e',
+      },
+      '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
+        backgroundColor: '#c8c8fa',
+      },
+      '.cm-gutters': {
+        backgroundColor: '#f6f8fa',
+        color: '#6a737d',
+        border: 'none',
+      },
+      '.cm-activeLineGutter': {
+        backgroundColor: '#e8e8e8',
+      },
+      '.cm-activeLine': {
+        backgroundColor: '#f6f8fa',
+      },
+      '.cm-foldPlaceholder': {
+        backgroundColor: '#e1e4e8',
+        border: 'none',
+        color: '#6a737d',
+      },
     },
-    '.cm-content': {
-      caretColor: '#24292e',
-    },
-    '.cm-cursor, .cm-dropCursor': {
-      borderLeftColor: '#24292e',
-    },
-    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-      backgroundColor: '#c8c8fa',
-    },
-    '.cm-gutters': {
-      backgroundColor: '#f6f8fa',
-      color: '#6a737d',
-      border: 'none',
-    },
-    '.cm-activeLineGutter': {
-      backgroundColor: '#e8e8e8',
-    },
-    '.cm-activeLine': {
-      backgroundColor: '#f6f8fa',
-    },
-    '.cm-foldPlaceholder': {
-      backgroundColor: '#e1e4e8',
-      border: 'none',
-      color: '#6a737d',
-    },
-  }, { dark: false });
+    { dark: false }
+  );
 }
 
 function createDarkTheme(): Extension {
-  return EditorView.theme({
-    '&': {
-      backgroundColor: '#1e1e1e',
-      color: '#d4d4d4',
+  return EditorView.theme(
+    {
+      '&': {
+        backgroundColor: '#1e1e1e',
+        color: '#d4d4d4',
+      },
+      '.cm-content': {
+        caretColor: '#aeafad',
+      },
+      '.cm-cursor, .cm-dropCursor': {
+        borderLeftColor: '#aeafad',
+      },
+      '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
+        backgroundColor: '#264f78',
+      },
+      '.cm-gutters': {
+        backgroundColor: '#1e1e1e',
+        color: '#858585',
+        border: 'none',
+      },
+      '.cm-activeLineGutter': {
+        backgroundColor: '#2a2d2e',
+      },
+      '.cm-activeLine': {
+        backgroundColor: '#2a2d2e',
+      },
+      '.cm-foldPlaceholder': {
+        backgroundColor: '#3c3c3c',
+        border: 'none',
+        color: '#858585',
+      },
     },
-    '.cm-content': {
-      caretColor: '#aeafad',
-    },
-    '.cm-cursor, .cm-dropCursor': {
-      borderLeftColor: '#aeafad',
-    },
-    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-      backgroundColor: '#264f78',
-    },
-    '.cm-gutters': {
-      backgroundColor: '#1e1e1e',
-      color: '#858585',
-      border: 'none',
-    },
-    '.cm-activeLineGutter': {
-      backgroundColor: '#2a2d2e',
-    },
-    '.cm-activeLine': {
-      backgroundColor: '#2a2d2e',
-    },
-    '.cm-foldPlaceholder': {
-      backgroundColor: '#3c3c3c',
-      border: 'none',
-      color: '#858585',
-    },
-  }, { dark: true });
+    { dark: true }
+  );
 }
 
 function getThemeExtension(theme: ThemeType): Extension[] {
@@ -234,11 +273,17 @@ const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(function CodeEdito
   const languageCompartment = useRef(new Compartment());
   const themeCompartment = useRef(new Compartment());
   const onChangeRef = useRef(onChange);
+  const onReadyRef = useRef(onReady);
+  const initialValueRef = useRef(initialValue);
 
-  // Keep onChange ref updated
+  // Keep callback refs updated inside effects to avoid accessing refs during render
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);
+
+  useEffect(() => {
+    onReadyRef.current = onReady;
+  }, [onReady]);
 
   // Build extensions array
   const buildExtensions = useCallback((): Extension[] => {
@@ -324,16 +369,18 @@ const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(function CodeEdito
     exts.push(themeCompartment.current.of(getThemeExtension(theme)));
 
     // Change listener
-    exts.push(EditorView.updateListener.of((update) => {
-      if (update.docChanged && onChangeRef.current) {
-        onChangeRef.current(update.state.doc.toString());
-      }
-    }));
+    exts.push(
+      EditorView.updateListener.of((update) => {
+        if (update.docChanged && onChangeRef.current) {
+          onChangeRef.current(update.state.doc.toString());
+        }
+      })
+    );
 
     // Custom height/sizing
     const editorStyles: Record<string, string> = {};
     const scrollerStyles: Record<string, string> = {};
-    
+
     if (height) {
       editorStyles.height = height;
       scrollerStyles.overflow = 'auto';
@@ -347,10 +394,12 @@ const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(function CodeEdito
     }
 
     if (Object.keys(editorStyles).length > 0 || Object.keys(scrollerStyles).length > 0) {
-      exts.push(EditorView.theme({
-        '&': editorStyles,
-        '.cm-scroller': scrollerStyles,
-      }));
+      exts.push(
+        EditorView.theme({
+          '&': editorStyles,
+          '.cm-scroller': scrollerStyles,
+        })
+      );
     }
 
     // Custom extensions from props
@@ -385,7 +434,7 @@ const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(function CodeEdito
     if (!containerRef.current) return;
 
     const state = EditorState.create({
-      doc: initialValue,
+      doc: initialValueRef.current,
       extensions: buildExtensions(),
     });
 
@@ -396,8 +445,8 @@ const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(function CodeEdito
 
     viewRef.current = view;
 
-    if (onReady) {
-      onReady(view);
+    if (onReadyRef.current) {
+      onReadyRef.current(view);
     }
 
     // Cleanup
@@ -405,9 +454,7 @@ const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(function CodeEdito
       view.destroy();
       viewRef.current = null;
     };
-    // Only run on mount/unmount - use compartments for dynamic updates
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [buildExtensions]);
 
   // Update language dynamically
   useEffect(() => {
@@ -428,49 +475,53 @@ const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(function CodeEdito
   }, [theme]);
 
   // Expose imperative handle
-  useImperativeHandle(ref, () => ({
-    getView: () => viewRef.current,
-    getValue: () => viewRef.current?.state.doc.toString() ?? '',
-    setValue: (value: string) => {
-      if (viewRef.current) {
-        viewRef.current.dispatch({
-          changes: {
-            from: 0,
-            to: viewRef.current.state.doc.length,
-            insert: value,
-          },
-        });
-      }
-    },
-    focus: () => viewRef.current?.focus(),
-    getSelection: () => {
-      if (!viewRef.current) return '';
-      const { from, to } = viewRef.current.state.selection.main;
-      return viewRef.current.state.sliceDoc(from, to);
-    },
-    insertText: (text: string) => {
-      if (viewRef.current) {
-        const { from } = viewRef.current.state.selection.main;
-        viewRef.current.dispatch({
-          changes: { from, insert: text },
-        });
-      }
-    },
-    setLanguage: (newLanguage: SupportedLanguage) => {
-      if (viewRef.current) {
-        viewRef.current.dispatch({
-          effects: languageCompartment.current.reconfigure(getLanguageExtension(newLanguage)),
-        });
-      }
-    },
-    setTheme: (newTheme: ThemeType) => {
-      if (viewRef.current) {
-        viewRef.current.dispatch({
-          effects: themeCompartment.current.reconfigure(getThemeExtension(newTheme)),
-        });
-      }
-    },
-  }), []);
+  useImperativeHandle(
+    ref,
+    () => ({
+      getView: () => viewRef.current,
+      getValue: () => viewRef.current?.state.doc.toString() ?? '',
+      setValue: (value: string) => {
+        if (viewRef.current) {
+          viewRef.current.dispatch({
+            changes: {
+              from: 0,
+              to: viewRef.current.state.doc.length,
+              insert: value,
+            },
+          });
+        }
+      },
+      focus: () => viewRef.current?.focus(),
+      getSelection: () => {
+        if (!viewRef.current) return '';
+        const { from, to } = viewRef.current.state.selection.main;
+        return viewRef.current.state.sliceDoc(from, to);
+      },
+      insertText: (text: string) => {
+        if (viewRef.current) {
+          const { from } = viewRef.current.state.selection.main;
+          viewRef.current.dispatch({
+            changes: { from, insert: text },
+          });
+        }
+      },
+      setLanguage: (newLanguage: SupportedLanguage) => {
+        if (viewRef.current) {
+          viewRef.current.dispatch({
+            effects: languageCompartment.current.reconfigure(getLanguageExtension(newLanguage)),
+          });
+        }
+      },
+      setTheme: (newTheme: ThemeType) => {
+        if (viewRef.current) {
+          viewRef.current.dispatch({
+            effects: themeCompartment.current.reconfigure(getThemeExtension(newTheme)),
+          });
+        }
+      },
+    }),
+    []
+  );
 
   return (
     <div

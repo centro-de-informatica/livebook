@@ -4,7 +4,7 @@
  * Sample article demonstrating Practical Typography principles
  * Based on: https://practicaltypography.com/maxims-of-page-layout.html
  */
-import PracticalLayout from "../layouts/PracticalLayout.astro";
+import PracticalLayout from '../layouts/PracticalLayout.astro';
 import {
   Article,
   ArticleHeader,
@@ -26,7 +26,7 @@ import {
   Abbr,
   SmallCaps,
   Figure,
-} from "../components/practical";
+} from '../components/practical';
 import {
   RoughBox,
   RoughCircle,
@@ -35,205 +35,206 @@ import {
   RoughArrow,
   RoughDiagram,
   RoughArrayBoxes,
-} from "../components/shapes";
+} from '../components/shapes';
 ---
 
-<PracticalLayout 
-  title="maxims of page layout" 
+<PracticalLayout
+  title="maxims of page layout"
   description="Principles of balance and consistency in typography"
 >
   <Article client:load>
-    <ArticleHeader
-      title="maxims of page layout"
-      subtitle="Principles of balance and consistency"
-    />
+    <ArticleHeader title="maxims of page layout" subtitle="Principles of balance and consistency" />
 
     <ArticleContent useIndents={true}>
       <Paragraph lead noIndent>
-        Successful typography requires you to pay attention to the whole, not just the parts. 
-        These maxims summarize the key principles I keep in mind when laying out a document.
+        Successful typography requires you to pay attention to the whole, not just the parts. These
+        maxims summarize the key principles I keep in mind when laying out a document.
       </Paragraph>
 
       <Heading level={2}>Body Text First</Heading>
 
       <Paragraph>
-        Decide first how the body text will look. Why? Because there is more body text than 
-        anything else. Four decisions&#8212;point size, line length, line spacing, and 
-        font&#8212;largely determine the appearance of the body text. Therefore, these 
-        decisions have the biggest influence on the legibility of the text and the overall 
-        appearance of the document.
+        Decide first how the body text will look. Why? Because there is more body text than anything
+        else. Four decisions&#8212;point size, line length, line spacing, and font&#8212;largely
+        determine the appearance of the body text. Therefore, these decisions have the biggest
+        influence on the legibility of the text and the overall appearance of the document.
       </Paragraph>
 
       <Paragraph>
-        The optimal line length is between 45&#8211;90 characters, including spaces. This 
-        might seem narrow, but studies have shown that longer lines make it harder to track 
-        from the end of one line to the beginning of the next. The result is fatigue and 
-        frustration for your reader.
+        The optimal line length is between 45&#8211;90 characters, including spaces. This might seem
+        narrow, but studies have shown that longer lines make it harder to track from the end of one
+        line to the beginning of the next. The result is fatigue and frustration for your reader.
       </Paragraph>
 
-      <Figure caption="The Gutenberg Bible (1455) demonstrates timeless typographic principles that remain relevant today.">
-        <img 
-          src="https://placehold.co/800x500/f7f7f0/1a1a1a?text=Gutenberg+Bible" 
+      <Figure
+        caption="The Gutenberg Bible (1455) demonstrates timeless typographic principles that remain relevant today."
+      >
+        <img
+          src="https://placehold.co/800x500/f7f7f0/1a1a1a?text=Gutenberg+Bible"
           alt="Spread from the Gutenberg Bible showing two-column layout"
-          style={{ maxWidth: "100%", height: "auto", display: "block" }}
+          style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
         />
       </Figure>
 
       <Paragraph>
-        For images and diagrams that benefit from additional space, use the wide variant. 
-        On large screens, it extends beyond the main content area:
+        For images and diagrams that benefit from additional space, use the wide variant. On large
+        screens, it extends beyond the main content area:
       </Paragraph>
 
-      <Figure wide caption="A wide figure that extends to the full available width on large screens, providing more detail for complex diagrams or imagery.">
-        <img 
-          src="https://placehold.co/1200x400/f0f0e8/1a1a1a?text=Wide+Figure+Example" 
+      <Figure
+        wide
+        caption="A wide figure that extends to the full available width on large screens, providing more detail for complex diagrams or imagery."
+      >
+        <img
+          src="https://placehold.co/1200x400/f0f0e8/1a1a1a?text=Wide+Figure+Example"
           alt="Wide figure demonstration"
-          style={{ maxWidth: "100%", height: "auto", display: "block" }}
+          style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
         />
       </Figure>
 
       <Heading level={2}>Line Spacing</Heading>
 
       <Paragraph>
-        Line spacing is the vertical distance between lines of text. The traditional term 
-        is <em>leading</em> (rhymes with <em>bedding</em>), so named because traditional 
-        print shops put strips of lead between lines of type to increase vertical space.
+        Line spacing is the vertical distance between lines of text. The traditional term is <em
+          >leading</em
+        > (rhymes with <em>bedding</em>), so named because traditional print shops put strips of
+        lead between lines of type to increase vertical space.
       </Paragraph>
 
       <Paragraph>
-        For most text, the optimal line spacing is between 120% and 145% of the point size. 
-        Most word processors, as well as <Abbr title="Cascading Style Sheets">CSS</Abbr>, let you define line spacing as 
-        a multiple. Or you can do the math&#8212;multiply your point size by the percentage.
+        For most text, the optimal line spacing is between 120% and 145% of the point size. Most
+        word processors, as well as <Abbr title="Cascading Style Sheets">CSS</Abbr>, let you define
+        line spacing as a multiple. Or you can do the math&#8212;multiply your point size by the
+        percentage.
       </Paragraph>
 
       <Blockquote cite="Practical Typography">
         <Paragraph>
-          Single-spaced typewritten text is dense and hard to read. But double-spacing is 
-          still looser than optimal. Find the sweet spot that gives your text room to 
-          breathe without wasting vertical space.
+          Single-spaced typewritten text is dense and hard to read. But double-spacing is still
+          looser than optimal. Find the sweet spot that gives your text room to breathe without
+          wasting vertical space.
         </Paragraph>
       </Blockquote>
 
       <Heading level={2}>First-Line Indents</Heading>
 
       <Aside>
-        The terms <strong>uppercase</strong> and <strong>lowercase</strong> come from 
-        traditional print shops. Capital letters, used less frequently, were stored in 
-        a case on a shelf above the other letters (then called <em>minuscule</em> letters).
+        The terms <strong>uppercase</strong> and <strong>lowercase</strong> come from traditional print
+        shops. Capital letters, used less frequently, were stored in a case on a shelf above the other
+        letters (then called <em>minuscule</em> letters).
       </Aside>
 
       <Paragraph>
-        A first-line indent is the most common way to signal the start of a new paragraph. 
-        The other common way is with space between paragraphs. First-line indents and space 
-        between paragraphs have the same relationship as belts and suspenders. You only 
-        need one to get the job done. Using both is a mistake.
+        A first-line indent is the most common way to signal the start of a new paragraph. The other
+        common way is with space between paragraphs. First-line indents and space between paragraphs
+        have the same relationship as belts and suspenders. You only need one to get the job done.
+        Using both is a mistake.
       </Paragraph>
 
       <Paragraph>
-        Typically, a first-line indent should be no smaller than the current point size, 
-        or else it will be hard to notice. It should be no bigger than four times the 
-        point size, or else the first line will seem disconnected from the left edge.
+        Typically, a first-line indent should be no smaller than the current point size, or else it
+        will be hard to notice. It should be no bigger than four times the point size, or else the
+        first line will seem disconnected from the left edge.
       </Paragraph>
 
       <Heading level={2}>Page Margins</Heading>
 
       <Aside>
-        If I have to work on a document from an outside source, one of the first things 
-        I do is display white-space characters, to reveal lurking horrors.
+        If I have to work on a document from an outside source, one of the first things I do is
+        display white-space characters, to reveal lurking horrors.
       </Aside>
 
       <Paragraph>
-        Page margins set the default territory your text occupies on the page. Because 
-        they determine the maximum width of the text block, page margins have the greatest 
-        effect on line length. Most word processors default to page margins of one inch. 
-        On standard 8.5&#8221; &#215; 11&#8221; paper, that produces a line length of 
-        6.5&#8221;. That was fine for the monospaced fonts of the typewriter era, which 
-        used a lot of horizontal space. But for proportional fonts, they&#8217;re too small.
+        Page margins set the default territory your text occupies on the page. Because they
+        determine the maximum width of the text block, page margins have the greatest effect on line
+        length. Most word processors default to page margins of one inch. On standard 8.5&#8221;
+        &#215; 11&#8221; paper, that produces a line length of 6.5&#8221;. That was fine for the
+        monospaced fonts of the typewriter era, which used a lot of horizontal space. But for
+        proportional fonts, they&#8217;re too small.
       </Paragraph>
 
       <Paragraph>
-        Professional typographers never use 8.5&#8221; &#215; 11&#8221; paper with a 
-        6.5&#8221; line length. Neither should you. Whether you&#8217;re writing for 
-        print or the web, set your text according to the principles of good typography. 
-        The white space will take care of itself.
+        Professional typographers never use 8.5&#8221; &#215; 11&#8221; paper with a 6.5&#8221; line
+        length. Neither should you. Whether you&#8217;re writing for print or the web, set your text
+        according to the principles of good typography. The white space will take care of itself.
       </Paragraph>
 
       <Heading level={2}>Small Caps and Abbreviations</Heading>
 
       <Paragraph>
-        When using acronyms like <Abbr title="Hyper Text Markup Language">HTML</Abbr>, 
-        <Abbr title="Cascading Style Sheets">CSS</Abbr>, or <Abbr title="Application Programming Interface">API</Abbr>, 
-        consider using small caps for a more refined appearance. Small caps require 
+        When using acronyms like <Abbr title="Hyper Text Markup Language">HTML</Abbr>,
+        <Abbr title="Cascading Style Sheets">CSS</Abbr>, or <Abbr
+          title="Application Programming Interface">API</Abbr
+        >, consider using small caps for a more refined appearance. Small caps require
         letterspacing&#8212;about 5% to 10%&#8212;to look their best.
       </Paragraph>
 
       <Paragraph>
-        You can also use <SmallCaps>small caps</SmallCaps> for emphasis in running text, 
-        though this should be done sparingly. The key is that small caps blend better 
-        with lowercase text than full capitals, which can appear to <SmallCaps>shout</SmallCaps> at 
-        the reader.
+        You can also use <SmallCaps>small caps</SmallCaps> for emphasis in running text, though this should
+        be done sparingly. The key is that small caps blend better with lowercase text than full capitals,
+        which can appear to <SmallCaps>shout</SmallCaps> at the reader.
       </Paragraph>
 
       <Heading level={2}>Foreground and Background</Heading>
 
       <Paragraph>
-        Divide the page into foreground and background. The foreground contains the most 
-        important page elements. (Hint: the body text is usually one of them.) The 
-        background contains everything else. Do not let the background elements upstage 
-        the foreground elements.
+        Divide the page into foreground and background. The foreground contains the most important
+        page elements. (Hint: the body text is usually one of them.) The background contains
+        everything else. Do not let the background elements upstage the foreground elements.
       </Paragraph>
 
       <Paragraph>
-        Remember that you have a limited number of tools for making distinctions: position, 
-        size, font, and sometimes color. Use them wisely and sparingly. Every visual 
-        distinction you add creates noise; make sure each one earns its place.
+        Remember that you have a limited number of tools for making distinctions: position, size,
+        font, and sometimes color. Use them wisely and sparingly. Every visual distinction you add
+        creates noise; make sure each one earns its place.
       </Paragraph>
 
       <Heading level={2}>Justified Text</Heading>
 
       <Aside position="right">
-        Exceptions exist. For comprehensive explanations, consult <em>Garner&#8217;s 
-        Modern English Usage</em> (see <SmallCaps>bibliography</SmallCaps>), the authority 
-        on how to use semicolons, colons, other punctuation marks, and the rest of the 
-        English language.
+        Exceptions exist. For comprehensive explanations, consult <em
+          >Garner&#8217;s Modern English Usage</em
+        > (see <SmallCaps>bibliography</SmallCaps>), the authority on how to use semicolons, colons,
+        other punctuation marks, and the rest of the English language.
       </Aside>
 
       <Paragraph>
-        Justified text is spaced so the left and right sides of the text block both have 
-        a clean edge. The usual alternative to justified text is left-aligned text, which 
-        has a straight left edge and an uneven right edge. Compared to left-aligned text, 
-        justification gives text a cleaner, more formal look.
+        Justified text is spaced so the left and right sides of the text block both have a clean
+        edge. The usual alternative to justified text is left-aligned text, which has a straight
+        left edge and an uneven right edge. Compared to left-aligned text, justification gives text
+        a cleaner, more formal look.
       </Paragraph>
 
       <Paragraph>
-        If you are using justified text, you must also turn on hyphenation to prevent 
-        gruesomely large spaces between words. Justification is a matter of personal 
-        preference. It is not a signifier of professional typography.
+        If you are using justified text, you must also turn on hyphenation to prevent gruesomely
+        large spaces between words. Justification is a matter of personal preference. It is not a
+        signifier of professional typography.
       </Paragraph>
 
       <Heading level={2}>Block Quotations</Heading>
 
       <Paragraph>
-        Formatting block quotations is not hard. Reduce the point size and line spacing 
-        slightly. Indent the text block between half an inch and a full inch on the left 
-        side, and optionally the same on the right. Or on the web, about 2&#8211;5 ems. 
-        Do not put quotation marks at the ends. They are redundant.
+        Formatting block quotations is not hard. Reduce the point size and line spacing slightly.
+        Indent the text block between half an inch and a full inch on the left side, and optionally
+        the same on the right. Or on the web, about 2&#8211;5 ems. Do not put quotation marks at the
+        ends. They are redundant.
       </Paragraph>
 
       <Blockquote cite="Matthew Butterick, Practical Typography">
         <Paragraph>
-          Block quotations are sometimes unavoidable. It may be that accuracy demands 
-          extensive quoting. But as a means of textual emphasis, block quotations 
-          sometimes become, like all caps, a form of self-defeating typography.
+          Block quotations are sometimes unavoidable. It may be that accuracy demands extensive
+          quoting. But as a means of textual emphasis, block quotations sometimes become, like all
+          caps, a form of self-defeating typography.
         </Paragraph>
       </Blockquote>
 
       <Heading level={2}>Code and Preformatted Text</Heading>
 
       <Paragraph>
-        When displaying code, use a monospaced font at a slightly reduced size. Inline 
-        code like <InlineCode>font-family</InlineCode> or <InlineCode>line-height</InlineCode> should 
-        have a subtle background to distinguish it from surrounding text.
+        When displaying code, use a monospaced font at a slightly reduced size. Inline code like <InlineCode
+          >font-family</InlineCode
+        > or <InlineCode>line-height</InlineCode> should have a subtle background to distinguish it from
+        surrounding text.
       </Paragraph>
 
       <Paragraph>
@@ -256,14 +257,15 @@ import {
       />
 
       <Paragraph>
-        The code block above demonstrates how to set up <Abbr title="Cascading Style Sheets">CSS</Abbr> custom 
-        properties for a typography system. Notice the left border that visually connects 
-        it to block quotations.
+        The code block above demonstrates how to set up <Abbr title="Cascading Style Sheets"
+          >CSS</Abbr
+        > custom properties for a typography system. Notice the left border that visually connects it
+        to block quotations.
       </Paragraph>
 
       <Paragraph>
-        For more complex code examples that benefit from additional width, use the wide 
-        variant. On large screens, it expands to occupy the full available space:
+        For more complex code examples that benefit from additional width, use the wide variant. On
+        large screens, it expands to occupy the full available space:
       </Paragraph>
 
       <CodeEditorBlock
@@ -298,10 +300,9 @@ import {
       <Heading level={2}>Bulleted and Numbered Lists</Heading>
 
       <Paragraph>
-        Are you still making bulleted and numbered lists by manually typing bullets or 
-        numbers at the beginning of each line? In the 21st century, no one should be 
-        doing this task by hand. Manually formatted lists are a waste of time and prone 
-        to error. Use automated lists.
+        Are you still making bulleted and numbered lists by manually typing bullets or numbers at
+        the beginning of each line? In the 21st century, no one should be doing this task by hand.
+        Manually formatted lists are a waste of time and prone to error. Use automated lists.
       </Paragraph>
 
       <List type="unordered">
@@ -312,19 +313,18 @@ import {
       </List>
 
       <Paragraph>
-        As I suggested in mixing fonts, it is acceptable to set a list index (a bullet 
-        or a number) in a different font than the list item itself. You can also make 
-        the list index a smaller point size.
+        As I suggested in mixing fonts, it is acceptable to set a list index (a bullet or a number)
+        in a different font than the list item itself. You can also make the list index a smaller
+        point size.
       </Paragraph>
 
       <Heading level={2}>Tables</Heading>
 
       <Paragraph>
-        Tables are one of the handiest tools in your word processor and web browser. A 
-        table is usually the right solution for layout problems where white-space 
-        characters are not up to the task. There are many ways to format a table. But 
-        default tables have two formatting defects you should always fix: cell borders 
-        and cell margins.
+        Tables are one of the handiest tools in your word processor and web browser. A table is
+        usually the right solution for layout problems where white-space characters are not up to
+        the task. There are many ways to format a table. But default tables have two formatting
+        defects you should always fix: cell borders and cell margins.
       </Paragraph>
 
       <Table>
@@ -359,59 +359,57 @@ import {
       </Table>
 
       <Paragraph>
-        Cell borders can make the grid cluttered and difficult to read, especially in 
-        tables with many small cells. The text in the cells will create an implied grid. 
-        When you are ready to format your table, I recommend turning off all the cell 
-        borders to start, and then turning them back on as needed.
+        Cell borders can make the grid cluttered and difficult to read, especially in tables with
+        many small cells. The text in the cells will create an implied grid. When you are ready to
+        format your table, I recommend turning off all the cell borders to start, and then turning
+        them back on as needed.
       </Paragraph>
 
       <Heading level={2}>Rules and Borders</Heading>
 
       <Paragraph>
-        In traditional printing terminology, a rule is a line; a border is a box. Like 
-        centered text, bold or italic, and all caps, rules and borders are best used 
-        sparingly. Ask yourself: do you really need a rule or border to make a visual 
-        distinction?
+        In traditional printing terminology, a rule is a line; a border is a box. Like centered
+        text, bold or italic, and all caps, rules and borders are best used sparingly. Ask yourself:
+        do you really need a rule or border to make a visual distinction?
       </Paragraph>
 
       <Rule />
 
       <Paragraph>
-        You can usually get equally good results by increasing the space above and below 
-        the text. Try that first. For borders, set the thickness between half a point 
-        and one point. Thinner borders can work on professionally printed goods but are 
-        too fine to reproduce well on an office printer or computer screen.
+        You can usually get equally good results by increasing the space above and below the text.
+        Try that first. For borders, set the thickness between half a point and one point. Thinner
+        borders can work on professionally printed goods but are too fine to reproduce well on an
+        office printer or computer screen.
       </Paragraph>
 
       <Heading level={2}>Responsive Design</Heading>
 
       <Paragraph>
-        Responsive web design is a technique that allows web layouts to reflow to suit 
-        the scale and dimensions of the user&#8217;s screen. In this way, rather than 
-        trying to confect a one-size-fits-all layout, a web designer can specify changes 
-        for small screens and large screens, and sizes in between.
+        Responsive web design is a technique that allows web layouts to reflow to suit the scale and
+        dimensions of the user&#8217;s screen. In this way, rather than trying to confect a
+        one-size-fits-all layout, a web designer can specify changes for small screens and large
+        screens, and sizes in between.
       </Paragraph>
 
       <Paragraph>
-        The rules of good typography do not change with screen size. The edges of the 
-        screen are not the end. Just the beginning. Start by considering line length, 
-        because it is the hardest to manage in a responsive layout. Regardless of screen 
-        width, the optimal line length is still 45&#8211;90 characters.
+        The rules of good typography do not change with screen size. The edges of the screen are not
+        the end. Just the beginning. Start by considering line length, because it is the hardest to
+        manage in a responsive layout. Regardless of screen width, the optimal line length is still
+        45&#8211;90 characters.
       </Paragraph>
 
       <Aside>
         <List type="unordered">
           <ListItem>
-            The easiest way to maintain consistent line length is by scaling the point 
-            size and element width at the same rate.
+            The easiest way to maintain consistent line length is by scaling the point size and
+            element width at the same rate.
           </ListItem>
           <ListItem>
-            Use <InlineCode>max-width</InlineCode> in <Abbr>CSS</Abbr> to ensure that the line 
-            length is bounded.
+            Use <InlineCode>max-width</InlineCode> in <Abbr>CSS</Abbr> to ensure that the line length
+            is bounded.
           </ListItem>
           <ListItem>
-            Be careful tying mobile layouts to <Abbr>CSS</Abbr> media queries based 
-            on pixel width.
+            Be careful tying mobile layouts to <Abbr>CSS</Abbr> media queries based on pixel width.
           </ListItem>
         </List>
       </Aside>
@@ -419,84 +417,87 @@ import {
       <Heading level={2}>Grids</Heading>
 
       <Paragraph>
-        A grid is a system of horizontal and vertical lines that can guide layout choices. 
-        Grids have been part of page layout since the Gutenberg Bible. In moderation, 
-        grids can be useful. But in the words of Dutch designer Wim Crouwel, 
-        &#8220;The grid is like the lines on a football field. You can play a great game 
-        in the grid or a lousy game.&#8221;
+        A grid is a system of horizontal and vertical lines that can guide layout choices. Grids
+        have been part of page layout since the Gutenberg Bible. In moderation, grids can be useful.
+        But in the words of Dutch designer Wim Crouwel, &#8220;The grid is like the lines on a
+        football field. You can play a great game in the grid or a lousy game.&#8221;
       </Paragraph>
 
       <Paragraph>
-        Grids are helpful when they encourage consistency. They make it easier to relate 
-        elements on the page to existing ones. But grids are not helpful when they create 
-        a false sense of security. If you take ugly content and align it to a 
-        grid&#8212;it is still ugly content.
+        Grids are helpful when they encourage consistency. They make it easier to relate elements on
+        the page to existing ones. But grids are not helpful when they create a false sense of
+        security. If you take ugly content and align it to a grid&#8212;it is still ugly content.
       </Paragraph>
 
       <Heading level={2}>The Nine Maxims</Heading>
 
       <List type="ordered">
         <ListItem>
-          <strong>Decide first how the body text will look.</strong> Because there is 
-          more body text than anything else.
+          <strong>Decide first how the body text will look.</strong> Because there is more body text than
+          anything else.
         </ListItem>
         <ListItem>
-          <strong>Divide the page into foreground and background.</strong> Do not let 
-          background elements upstage foreground elements.
+          <strong>Divide the page into foreground and background.</strong> Do not let background elements
+          upstage foreground elements.
         </ListItem>
         <ListItem>
-          <strong>Make adjustments with the smallest visible increments.</strong> 
+          <strong>Make adjustments with the smallest visible increments.</strong>
           Typography thrives on fine details.
         </ListItem>
         <ListItem>
-          <strong>When in doubt, try it both ways.</strong> There is no substitute for 
-          making samples of two options and getting a visual reaction.
+          <strong>When in doubt, try it both ways.</strong> There is no substitute for making samples
+          of two options and getting a visual reaction.
         </ListItem>
         <ListItem>
-          <strong>Be consistent.</strong> Things that are the same should look the same. 
-          Things that look different should actually be different.
+          <strong>Be consistent.</strong> Things that are the same should look the same. Things that look
+          different should actually be different.
         </ListItem>
         <ListItem>
-          <strong>Relate each new element to existing elements.</strong> The page becomes 
-          more constrained with each new piece.
+          <strong>Relate each new element to existing elements.</strong> The page becomes more constrained
+          with each new piece.
         </ListItem>
         <ListItem>
-          <strong>Keep it simple.</strong> If you think you need three colors and five 
-          fonts, think again.
+          <strong>Keep it simple.</strong> If you think you need three colors and five fonts, think again.
         </ListItem>
         <ListItem>
-          <strong>Imitate what you like.</strong> Learning to see what is good about 
-          other examples of typography makes it easier to solve problems in your own 
-          layouts.
+          <strong>Imitate what you like.</strong> Learning to see what is good about other examples of
+          typography makes it easier to solve problems in your own layouts.
         </ListItem>
         <ListItem>
-          <strong>Do not fear white space.</strong> Work outward from the text, not 
-          inward from the page edges. If the text looks good, the white space will 
-          take care of itself.
+          <strong>Do not fear white space.</strong> Work outward from the text, not inward from the page
+          edges. If the text looks good, the white space will take care of itself.
         </ListItem>
       </List>
 
       <Rule sectionBreak />
 
       <Paragraph noIndent>
-        These principles form the foundation of practical typography. They are not 
-        arbitrary rules but time-tested guidelines that help create documents that are 
-        both beautiful and readable. Good typography is ultimately about 
-        respect&#8212;respect for your readers and for the craft of visual communication.
+        These principles form the foundation of practical typography. They are not arbitrary rules
+        but time-tested guidelines that help create documents that are both beautiful and readable.
+        Good typography is ultimately about respect&#8212;respect for your readers and for the craft
+        of visual communication.
       </Paragraph>
 
       <Heading level={2}>Hand-Drawn Elements</Heading>
 
       <Paragraph>
-        Sometimes a document benefits from a more relaxed, sketchy aesthetic. Hand-drawn 
-        elements can add personality and visual interest without compromising readability. 
-        These sketchy graphics are created using <InlineCode>rough.js</InlineCode>, a 
-        library that renders primitives in a hand-drawn style.
+        Sometimes a document benefits from a more relaxed, sketchy aesthetic. Hand-drawn elements
+        can add personality and visual interest without compromising readability. These sketchy
+        graphics are created using <InlineCode>rough.js</InlineCode>, a library that renders
+        primitives in a hand-drawn style.
       </Paragraph>
 
       <Figure caption="Basic geometric shapes rendered with a sketchy, hand-drawn appearance.">
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center', padding: '2rem 0' }}>
-          <RoughBox 
+        <div
+          style={{
+            display: 'flex',
+            gap: '2rem',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            padding: '2rem 0',
+          }}
+        >
+          <RoughBox
             client:only="react"
             width={120}
             height={120}
@@ -505,7 +506,7 @@ import {
             strokeWidth={2}
             roughness={1.5}
           />
-          <RoughCircle 
+          <RoughCircle
             client:only="react"
             diameter={110}
             fill="rgba(100, 100, 255, 0.3)"
@@ -513,7 +514,7 @@ import {
             strokeWidth={2}
             roughness={1.5}
           />
-          <RoughEllipse 
+          <RoughEllipse
             client:only="react"
             width={140}
             height={100}
@@ -526,12 +527,12 @@ import {
       </Figure>
 
       <Paragraph>
-        Lines and arrows can be used to connect ideas or draw attention to specific 
-        elements. The sketchy style makes them feel less formal and more approachable.
+        Lines and arrows can be used to connect ideas or draw attention to specific elements. The
+        sketchy style makes them feel less formal and more approachable.
       </Paragraph>
 
       <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', padding: '1rem 0' }}>
-        <RoughLine 
+        <RoughLine
           client:only="react"
           x1={10}
           y1={50}
@@ -541,7 +542,7 @@ import {
           strokeWidth={2}
           roughness={1.2}
         />
-        <RoughArrow 
+        <RoughArrow
           client:only="react"
           x1={10}
           y1={50}
@@ -555,22 +556,22 @@ import {
       </div>
 
       <Paragraph>
-        For more complex compositions, you can combine multiple rough elements into a 
-        single custom sketch. This flexibility allows you to create diagrams, 
-        illustrations, and visual aids that maintain a consistent hand-drawn aesthetic.
+        For more complex compositions, you can combine multiple rough elements into a single custom
+        sketch. This flexibility allows you to create diagrams, illustrations, and visual aids that
+        maintain a consistent hand-drawn aesthetic.
       </Paragraph>
 
-      <Figure caption="A custom sketch combining multiple rough.js primitives to create a simple diagram.">
+      <Figure
+        caption="A custom sketch combining multiple rough.js primitives to create a simple diagram."
+      >
         <div style={{ display: 'flex', justifyContent: 'center', padding: '1rem 0' }}>
-          <RoughDiagram
-            client:only="react"
-            width={400}
-            height={200}
-          />
+          <RoughDiagram client:only="react" width={400} height={200} />
         </div>
       </Figure>
 
-      <Figure caption="An animated array visualization where each box is highlighted in sequence every second.">
+      <Figure
+        caption="An animated array visualization where each box is highlighted in sequence every second."
+      >
         <div style={{ display: 'flex', justifyContent: 'center', padding: '1rem 0' }}>
           <RoughArrayBoxes
             client:only="react"
@@ -584,18 +585,18 @@ import {
       </Figure>
 
       <Paragraph>
-        While these sketchy elements should be used sparingly in formal documents, they 
-        can be effective for presentations, educational materials, or any context where a 
-        more casual tone is appropriate. The key is to use them purposefully, not as a 
-        substitute for clear thinking and good design.
+        While these sketchy elements should be used sparingly in formal documents, they can be
+        effective for presentations, educational materials, or any context where a more casual tone
+        is appropriate. The key is to use them purposefully, not as a substitute for clear thinking
+        and good design.
       </Paragraph>
 
       <Rule sectionBreak />
 
       <Paragraph noIndent>
-        Typography is a craft that balances form and function. Whether using precise 
-        digital letterforms or hand-drawn sketches, the goal remains the same: to 
-        communicate clearly and beautifully with your readers.
+        Typography is a craft that balances form and function. Whether using precise digital
+        letterforms or hand-drawn sketches, the goal remains the same: to communicate clearly and
+        beautifully with your readers.
       </Paragraph>
     </ArticleContent>
   </Article>

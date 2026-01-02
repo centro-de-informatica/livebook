@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface TableProps {
   children: ReactNode;
@@ -37,12 +37,12 @@ export interface TableCellProps {
  * - Increased cell margins for legibility
  * - Default tables have two defects to fix: cell borders and cell margins
  */
-export function Table({ children, className = "", style }: TableProps) {
+export function Table({ children, className = '', style }: TableProps) {
   const tableStyle: CSSProperties = {
-    width: "100%",
-    borderCollapse: "collapse",
-    margin: "var(--pt-space-lg) 0",
-    fontSize: "0.92rem",
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: 'var(--pt-space-lg) 0',
+    fontSize: '0.92rem',
     ...style,
   };
 
@@ -65,23 +65,16 @@ export function TableRow({ children }: TableRowProps) {
   return <tr className="pt-table-row">{children}</tr>;
 }
 
-export function TableCell({
-  children,
-  header = false,
-  className = "",
-  style,
-}: TableCellProps) {
-  const Tag = header ? "th" : "td";
+export function TableCell({ children, header = false, className = '', style }: TableCellProps) {
+  const Tag = header ? 'th' : 'td';
 
   const cellStyle: CSSProperties = {
-    padding: "0.4em 0.8em",
-    textAlign: "left",
-    verticalAlign: "top",
-    borderBottom: header
-      ? "1.5px solid var(--pt-color-text)"
-      : "none",
-    fontWeight: header ? 600 : "normal",
-    fontFamily: header ? "var(--pt-font-sans)" : "inherit",
+    padding: '0.4em 0.8em',
+    textAlign: 'left',
+    verticalAlign: 'top',
+    borderBottom: header ? '1.5px solid var(--pt-color-text)' : 'none',
+    fontWeight: header ? 600 : 'normal',
+    fontFamily: header ? 'var(--pt-font-sans)' : 'inherit',
     ...style,
   };
 

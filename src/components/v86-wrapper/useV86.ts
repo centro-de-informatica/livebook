@@ -1,20 +1,20 @@
-import { useCallback } from "react";
-import type { V86, V86Image } from "../../types/v86";
+import { useCallback } from 'react';
+import type { V86, V86Image } from '../../types/v86';
 
 /**
  * Hook customizado para controlar uma instancia V86
- * 
+ *
  * Responsabilidades:
  * - Abstrair operacoes sobre a instancia v86
  * - Fornecer funcoes utilitarias para controle do emulador
  * - Manter a API simples e composavel
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {
  *   const [emulator, setEmulator] = useState<V86 | null>(null);
  *   const v86 = useV86(emulator);
- *   
+ *
  *   return (
  *     <>
  *       <V86Emulator

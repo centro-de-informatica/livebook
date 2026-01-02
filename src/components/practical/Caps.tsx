@@ -1,5 +1,4 @@
-import React from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface SmallCapsProps {
   children: ReactNode;
@@ -25,11 +24,11 @@ export interface AbbrProps {
  * - Requires letterspacing (0.05em)
  * - Use for acronyms and initialisms
  */
-export function SmallCaps({ children, className = "", style }: SmallCapsProps) {
+export function SmallCaps({ children, className = '', style }: SmallCapsProps) {
   const capsStyle: CSSProperties = {
-    fontVariant: "small-caps",
-    textTransform: "lowercase",
-    letterSpacing: "0.05em",
+    fontVariant: 'small-caps',
+    textTransform: 'lowercase',
+    letterSpacing: '0.05em',
     ...style,
   };
 
@@ -43,13 +42,13 @@ export function SmallCaps({ children, className = "", style }: SmallCapsProps) {
 /**
  * Abbreviation component with small caps styling
  */
-export function Abbr({ children, title, className = "", style }: AbbrProps) {
+export function Abbr({ children, title, className = '', style }: AbbrProps) {
   const abbrStyle: CSSProperties = {
-    fontVariant: "small-caps",
-    textTransform: "lowercase",
-    letterSpacing: "0.05em",
-    cursor: title ? "help" : "default",
-    textDecoration: "none",
+    fontVariant: 'small-caps',
+    textTransform: 'lowercase',
+    letterSpacing: '0.05em',
+    cursor: title ? 'help' : 'default',
+    textDecoration: 'none',
     ...style,
   };
 

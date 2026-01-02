@@ -22,6 +22,14 @@
   - Nao deixe vazamento de memoria
   - Mantenha referencias aos devidos elementos/componentes necessarios
 
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+### Refs vs State em Hooks
+
+- Se o valor e retornado pelo hook e afeta a renderizacao do consumidor, use `useState`
+- Se o valor e apenas para uso interno (DOM refs, timers, subscriptions), use `useRef`
+- Atualizacoes de refs (ex: `onReadyRef.current = callback`) devem ocorrer dentro de `useEffect`, nunca no corpo do componente
+
 ## Estrutura de Pastas e Arquivos
 
 ### Paginas
@@ -48,7 +56,7 @@ Padrao obrigatorio para wrappers de bibliotecas externas:
 src/components/<nome-ou-ref-a-lib>-wrapper/
   <nome-ou-ref-a-lib>.tsx    # Core thin wrapper
   use<nome-ou-ref-a-lib>.ts  # Hook customizado (obrigatorio para wrappers)
-  index.ts                   # Exports
+  index.tsx                   # Exports
 ```
 
 ## Lib Wrappers - Implementacoes
@@ -69,7 +77,7 @@ src/components/v86-wrapper/
   V86Emulator.tsx     # Core thin wrapper
   useV86.ts           # Hook customizado (obrigatorio)
   V86Controller.ts    # Controller para gerenciar comunicacao
-  index.ts            # Exports
+  index.tsx            # Exports
 ```
 
 #### src/components/v86-wrapper/V86Emulator.tsx
@@ -108,7 +116,7 @@ src/components/v86-wrapper/
 src/components/codemirror-wrapper/
   CodeEditor.tsx      # Core thin wrapper
   useCodeEditor.ts    # Hook customizado (obrigatorio)
-  index.ts            # Exports
+  index.tsx            # Exports
 ```
 
 #### src/components/codemirror-wrapper/CodeEditor.tsx
@@ -150,7 +158,7 @@ src/components/rough-wrapper/
   RoughCanvas.tsx     # Core thin wrapper
   RoughSvg.tsx        # Core thin wrapper SVG
   useRough.ts         # Hook customizado (obrigatorio)
-  index.ts            # Exports
+  index.tsx            # Exports
 ```
 
 #### src/components/rough-wrapper/RoughCanvas.tsx
@@ -201,8 +209,8 @@ src/components/rough-wrapper/
 
 **Regra:** Não use renderização condicional (`{show && <Component />}`) para UIs que possuem estado interno (inputs, scroll, vídeo). Use o componente `<Activity />`.
 
-* **Para que:** Manter o estado e o DOM vivos enquanto o componente está oculto.
-* **Comportamento:** `mode="hidden"` unmonta os efeitos (`useEffect`), pausa timers e desprioriza renderização, mas mantém o estado.
+- **Para que:** Manter o estado e o DOM vivos enquanto o componente está oculto.
+- **Comportamento:** `mode="hidden"` unmonta os efeitos (`useEffect`), pausa timers e desprioriza renderização, mas mantém o estado.
 
 ```javascript
 // snippet-generic-activity.tsx
@@ -220,15 +228,14 @@ function TabSystem({ activeTab }) {
     </>
   );
 }
-
 ```
 
 ### 2. Declarative Resource Handling with `use`
 
 **Regra:** Utilize o hook `use(promise)` para ler dados assíncronos diretamente no corpo da renderização.
 
-* **Para que:** Eliminar `useEffect` para data fetching e `isLoading` manuais.
-* **Restrição:** No client-side, a Promise deve ser estável (ex: vinda de um cache ou memoizada) para evitar loops.
+- **Para que:** Eliminar `useEffect` para data fetching e `isLoading` manuais.
+- **Restrição:** No client-side, a Promise deve ser estável (ex: vinda de um cache ou memoizada) para evitar loops.
 
 ```javascript
 // snippet-generic-use.tsx
@@ -236,17 +243,16 @@ import { use } from 'react';
 
 function UserProfile({ userPromise }) {
   // O componente "suspende" automaticamente aqui
-  const user = use(userPromise); 
+  const user = use(userPromise);
   return <div>Hello, {user.name}</div>;
 }
-
 ```
 
 ### 3. Logic Decoupling with `useEffectEvent`
 
 **Regra:** Funções que acessam props/state mas não devem disparar o efeito devem ser envolvidas em `useEffectEvent`.
 
-* **Para que:** Manter arrays de dependência limpos e evitar execuções desnecessárias.
+- **Para que:** Manter arrays de dependência limpos e evitar execuções desnecessárias.
 
 ```javascript
 // snippet-generic-effect-event.tsx
@@ -254,7 +260,7 @@ import { useEffect, useEffectEvent } from 'react';
 
 function Chat({ roomId, theme }) {
   const onConnected = useEffectEvent(() => {
-    logAnalytics("Connected", theme); // Usa 'theme' sem ser dependência
+    logAnalytics('Connected', theme); // Usa 'theme' sem ser dependência
   });
 
   useEffect(() => {
@@ -263,15 +269,14 @@ function Chat({ roomId, theme }) {
     return () => conn.disconnect();
   }, [roomId]); // Não dispara se o tema mudar
 }
-
 ```
 
 ### 4. UI Transitions with `ViewTransition`
 
 **Regra:** Envolva mudanças de estado que alteram a UI drasticamente em `<ViewTransition />`.
 
-* **Para que:** Ativar a API de View Transitions nativa do browser para animações fluidas (cross-fade automático).
-* **Requisito:** A mudança de estado deve ocorrer dentro de um `startTransition`.
+- **Para que:** Ativar a API de View Transitions nativa do browser para animações fluidas (cross-fade automático).
+- **Requisito:** A mudança de estado deve ocorrer dentro de um `startTransition`.
 
 ```javascript
 // snippet-generic-viewtransition.tsx
@@ -281,7 +286,7 @@ function Gallery({ images }) {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState(0);
 
-  const next = () => startTransition(() => setSelected(s => s + 1));
+  const next = () => startTransition(() => setSelected((s) => s + 1));
 
   return (
     <ViewTransition>
@@ -289,14 +294,13 @@ function Gallery({ images }) {
     </ViewTransition>
   );
 }
-
 ```
 
 ### 5. Robust Error Handling with `ErrorBoundaries`
 
 **Regra:** Todo componente que utiliza `use(promise)` DEVE estar envolto em um `ErrorBoundary`.
 
-* **Para que:** Capturar rejeições de Promises de forma declarativa, separando o "caminho feliz" da lógica de erro.
+- **Para que:** Capturar rejeições de Promises de forma declarativa, separando o "caminho feliz" da lógica de erro.
 
 ```javascript
 // snippet-generic-error-boundary.tsx
@@ -311,15 +315,13 @@ function App() {
     </ErrorBoundary>
   );
 }
-
 ```
 
 ---
 
 ## Technical References
 
-* [React 19.2 Activity Documentation](https://react.dev/reference/react/Activity)
-* [The `use` Hook Guide](https://www.google.com/search?q=%5Bhttps://react.dev/reference/react/use%5D(https://react.dev/reference/react/use))
-* [Decoupling Effects with useEffectEvent](https://react.dev/reference/react/useEffectEvent)
-* [View Transitions API in React](https://www.google.com/search?q=https://react.dev/reference/react-dom/components/ViewTransition)
-
+- [React 19.2 Activity Documentation](https://react.dev/reference/react/Activity)
+- [The `use` Hook Guide](<https://www.google.com/search?q=%5Bhttps://react.dev/reference/react/use%5D(https://react.dev/reference/react/use)>)
+- [Decoupling Effects with useEffectEvent](https://react.dev/reference/react/useEffectEvent)
+- [View Transitions API in React](https://www.google.com/search?q=https://react.dev/reference/react-dom/components/ViewTransition)

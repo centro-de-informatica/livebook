@@ -1,7 +1,7 @@
 /**
  * Practical Typography CSS-in-JS Style System
  * Based on https://practicaltypography.com
- * 
+ *
  * Key principles:
  * - Line length: 45-90 characters
  * - Line spacing: 120-145% of point size
@@ -13,8 +13,10 @@
 
 export const PT_TOKENS = {
   // Font Families
-  fontSerif: '"Source Serif 4", "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif',
-  fontSans: '"Source Sans 3", "Concourse", "Gill Sans", "Gill Sans MT", "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSerif:
+    '"Source Serif 4", "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif',
+  fontSans:
+    '"Source Sans 3", "Concourse", "Gill Sans", "Gill Sans MT", "Helvetica Neue", Helvetica, Arial, sans-serif',
   fontMono: '"Source Code Pro", "Triplicate", "Consolas", "Monaco", "Andale Mono", monospace',
 
   // Colors - Warm tones like practicaltypography.com

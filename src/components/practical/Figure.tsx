@@ -1,4 +1,4 @@
-import React, { type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from 'react';
 
 export interface FigureProps {
   children: ReactNode;
@@ -18,26 +18,20 @@ export interface FigureProps {
  * - Proper margins
  * - Caption with smaller text and muted color
  */
-export function Figure({
-  children,
-  caption,
-  wide = false,
-  className = "",
-  style,
-}: FigureProps) {
+export function Figure({ children, caption, wide = false, className = '', style }: FigureProps) {
   const figureStyle: CSSProperties = {
-    marginTop: "var(--pt-space-xl)",
-    marginBottom: "var(--pt-space-xl)",
+    marginTop: 'var(--pt-space-xl)',
+    marginBottom: 'var(--pt-space-xl)',
     ...style,
   };
 
   const captionStyle: CSSProperties = {
-    marginTop: "var(--pt-space-sm)",
-    fontSize: "0.9rem",
-    color: "var(--pt-color-text-muted)",
+    marginTop: 'var(--pt-space-sm)',
+    fontSize: '0.9rem',
+    color: 'var(--pt-color-text-muted)',
   };
 
-  const wideClass = wide ? "pt-figure--wide" : "";
+  const wideClass = wide ? 'pt-figure--wide' : '';
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { type CSSProperties } from "react";
+import { type CSSProperties } from 'react';
 
 export interface RuleProps {
   /** Section break style with asterisks */
@@ -16,14 +16,14 @@ export interface RuleProps {
  * - Half point to one point thickness
  * - Can use section break style (asterisks) for major breaks
  */
-export function Rule({ sectionBreak = false, className = "", style }: RuleProps) {
+export function Rule({ sectionBreak = false, className = '', style }: RuleProps) {
   if (sectionBreak) {
     const breakStyle: CSSProperties = {
-      border: "none",
-      textAlign: "center",
-      margin: "var(--pt-space-xxl) 0",
-      color: "var(--pt-color-text-muted)",
-      letterSpacing: "0.5em",
+      border: 'none',
+      textAlign: 'center',
+      margin: 'var(--pt-space-xxl) 0',
+      color: 'var(--pt-color-text-muted)',
+      letterSpacing: '0.5em',
       ...style,
     };
 
@@ -40,9 +40,9 @@ export function Rule({ sectionBreak = false, className = "", style }: RuleProps)
   }
 
   const hrStyle: CSSProperties = {
-    border: "none",
-    borderTop: "1px solid var(--pt-color-rule)",
-    margin: "var(--pt-space-xl) 0",
+    border: 'none',
+    borderTop: '1px solid var(--pt-color-rule)',
+    margin: 'var(--pt-space-xl) 0',
     ...style,
   };
 

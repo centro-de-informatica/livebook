@@ -11,7 +11,7 @@ interface Props {
   lang?: string;
 }
 
-const { title = "Practical Typography", description = "", lang = "en" } = Astro.props;
+const { title = 'Practical Typography', description = '', lang = 'en' } = Astro.props;
 ---
 
 <!doctype html>
@@ -22,7 +22,7 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
     <meta name="generator" content={Astro.generator} />
     {description && <meta name="description" content={description} />}
     <title>{title}</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -42,10 +42,13 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
 <style is:global>
   /* CSS Variables - Practical Typography Style */
   :root {
-    --pt-font-serif: "Source Serif 4", "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
-    --pt-font-sans: "Source Sans 3", "Concourse", "Gill Sans", "Gill Sans MT", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --pt-font-mono: "Source Code Pro", "Triplicate", "Consolas", "Monaco", "Andale Mono", monospace;
-    
+    --pt-font-serif:
+      'Source Serif 4', 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+    --pt-font-sans:
+      'Source Sans 3', 'Concourse', 'Gill Sans', 'Gill Sans MT', 'Helvetica Neue', Helvetica, Arial,
+      sans-serif;
+    --pt-font-mono: 'Source Code Pro', 'Triplicate', 'Consolas', 'Monaco', 'Andale Mono', monospace;
+
     --pt-color-text: #1a1a1a;
     --pt-color-text-muted: #667;
     --pt-color-background: #fffff8;
@@ -55,18 +58,18 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
     --pt-color-rule: #333;
     --pt-color-aside-border: #ccc;
     --pt-color-code-bg: #f5f5f0;
-    
+
     --pt-line-height: 1.4;
     --pt-line-height-tight: 1.25;
     --pt-line-height-loose: 1.5;
-    
+
     --pt-space-xs: 0.25rem;
     --pt-space-sm: 0.5rem;
     --pt-space-md: 1rem;
     --pt-space-lg: 1.5rem;
     --pt-space-xl: 2rem;
     --pt-space-xxl: 2.5rem;
-    
+
     --pt-indent: 1.5em;
     --pt-aside-width: 10rem;
     --pt-aside-gap: 1.5rem;
@@ -86,7 +89,9 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
     }
   }
 
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -102,7 +107,10 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
     height: 100%;
     -webkit-font-smoothing: subpixel-antialiased;
     text-rendering: optimizeLegibility;
-    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    font-feature-settings:
+      'kern' 1,
+      'liga' 1,
+      'calt' 1;
   }
 
   body {
@@ -144,7 +152,7 @@ const { title = "Practical Typography", description = "", lang = "en" } = Astro.
       padding-left: calc(var(--pt-aside-width) + var(--pt-aside-gap) + 2rem);
       padding-right: calc(var(--pt-aside-width) + var(--pt-aside-gap) + 2rem);
     }
-    
+
     .pt-article-header {
       position: absolute;
       left: calc(-1 * var(--pt-aside-width) - var(--pt-aside-gap));

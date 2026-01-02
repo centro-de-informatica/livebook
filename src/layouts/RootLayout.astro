@@ -1,33 +1,33 @@
 ---
 interface Props {
-    title?: string;
+  title?: string;
 }
 
-const { title = "Linux Sandbox" } = Astro.props;
+const { title = 'Linux Sandbox' } = Astro.props;
 ---
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <title>{title}</title>
-        <style>
-            body {
-                margin: 0;
-                padding: 20px;
-                background-color: #1a1a1a;
-                color: #fff;
-                font-family: system-ui, sans-serif;
-            }
-            h1 {
-                margin-bottom: 16px;
-                font-size: 1.5rem;
-            }
-        </style>
-    </head>
-    <body>
-        <slot />
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background-color: #1a1a1a;
+        color: #fff;
+        font-family: system-ui, sans-serif;
+      }
+      h1 {
+        margin-bottom: 16px;
+        font-size: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>

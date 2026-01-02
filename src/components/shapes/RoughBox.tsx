@@ -31,9 +31,9 @@ export function RoughBox({
 
   useEffect(() => {
     if (!isReady) return;
-    
+
     clear();
-    
+
     const padding = 4;
     rectangle(padding, padding, width - padding * 2, height - padding * 2, {
       fill,

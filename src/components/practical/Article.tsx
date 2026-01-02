@@ -1,4 +1,4 @@
-import React, { type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from 'react';
 
 export interface ArticleProps {
   children: ReactNode;
@@ -35,10 +35,10 @@ export interface ArticleContentProps {
  * - Proper max-width for line length (45-90 characters)
  * - Centered layout
  */
-export function Article({ children, className = "", style }: ArticleProps) {
+export function Article({ children, className = '', style }: ArticleProps) {
   const articleStyle: CSSProperties = {
-    maxWidth: "min(42em, calc(100% - 2rem))",
-    margin: "0 auto",
+    maxWidth: 'min(42em, calc(100% - 2rem))',
+    margin: '0 auto',
     ...style,
   };
 
@@ -53,36 +53,31 @@ export function Article({ children, className = "", style }: ArticleProps) {
  * Article header with title and optional subtitle
  * Following Practical Typography style: left-aligned title area with content flowing beside it
  */
-export function ArticleHeader({
-  title,
-  subtitle,
-  className = "",
-  style,
-}: ArticleHeaderProps) {
+export function ArticleHeader({ title, subtitle, className = '', style }: ArticleHeaderProps) {
   const headerStyle: CSSProperties = {
-    display: "block",
-    marginBottom: "var(--pt-space-lg)",
-    paddingTop: "var(--pt-space-sm)",
-    borderTop: "1px solid var(--pt-color-text)",
+    display: 'block',
+    marginBottom: 'var(--pt-space-lg)',
+    paddingTop: 'var(--pt-space-sm)',
+    borderTop: '1px solid var(--pt-color-text)',
     ...style,
   };
 
   const titleStyle: CSSProperties = {
-    fontFamily: "var(--pt-font-sans)",
-    fontSize: "1.3rem",
+    fontFamily: 'var(--pt-font-sans)',
+    fontSize: '1.3rem',
     fontWeight: 700,
     lineHeight: 1.2,
     margin: 0,
-    marginTop: "var(--pt-space-xs)",
+    marginTop: 'var(--pt-space-xs)',
   };
 
   const subtitleStyle: CSSProperties = {
-    fontSize: "0.9rem",
-    color: "var(--pt-color-text-muted)",
+    fontSize: '0.9rem',
+    color: 'var(--pt-color-text-muted)',
     margin: 0,
-    marginTop: "0.3rem",
-    fontStyle: "italic",
-    fontFamily: "var(--pt-font-serif)",
+    marginTop: '0.3rem',
+    fontStyle: 'italic',
+    fontFamily: 'var(--pt-font-serif)',
   };
 
   return (
@@ -99,20 +94,16 @@ export function ArticleHeader({
 export function ArticleContent({
   children,
   useIndents = true,
-  className = "",
+  className = '',
   style,
 }: ArticleContentProps) {
   const contentStyle: CSSProperties = {
     ...style,
   };
 
-  const classes = [
-    "pt-article-content",
-    useIndents ? "pt-indent" : "pt-space-between",
-    className,
-  ]
+  const classes = ['pt-article-content', useIndents ? 'pt-indent' : 'pt-space-between', className]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return (
     <div className={classes} style={contentStyle}>

@@ -1,4 +1,4 @@
-import type { V86, V86Image, Event as V86Event } from "../../types/v86";
+import type { V86, V86Image, Event as V86Event } from '../../types/v86';
 
 /**
  * Opcoes para aguardar texto na tela VGA
@@ -50,27 +50,27 @@ export type V86EventListener<T = unknown> = (data: T) => void;
 /**
  * Utilitario dev-friendly para controle avancado da instancia V86
  * Prove metodos para comunicacao, ciclo de vida, filesystem e comandos
- * 
+ *
  * @example
  * ```tsx
  * const controller = new V86Controller();
  * controller.attach(emulator);
- * 
+ *
  * // Aguardar boot
  * await controller.waitForScreenText("login:");
- * 
+ *
  * // Executar comando
  * const result = await controller.executeCommand("ls -la");
- * 
+ *
  * // Capturar screenshot
  * controller.makeScreenshot();
  * ```
  */
 export class V86Controller {
   private emulator: V86 | null = null;
-  private serialBuffer: string = "";
+  private serialBuffer: string = '';
   private serialListeners: Set<(data: string) => void> = new Set();
-  private eventListeners: Map<V86Event, Set<Function>> = new Map();
+  private eventListeners: Map<V86Event, Set<(...args: unknown[]) => void>> = new Map();
   private serialByteListener: ((byte: number) => void) | null = null;
 
   constructor(emulator?: V86 | null) {
@@ -93,19 +93,19 @@ export class V86Controller {
   detach(): void {
     // Remove serial byte listener
     if (this.serialByteListener && this.emulator) {
-      this.emulator.remove_listener("serial0-output-byte", this.serialByteListener);
+      this.emulator.remove_listener('serial0-output-byte', this.serialByteListener);
       this.serialByteListener = null;
     }
-    
+
     // Remove todos os listeners registrados
     this.eventListeners.forEach((listeners, event) => {
-      listeners.forEach(listener => {
+      listeners.forEach((listener) => {
         this.emulator?.remove_listener(event, listener);
       });
     });
     this.eventListeners.clear();
     this.emulator = null;
-    this.serialBuffer = "";
+    this.serialBuffer = '';
     this.serialListeners.clear();
   }
 
@@ -191,12 +191,12 @@ export class V86Controller {
   /**
    * Salva o estado em um arquivo para download (apenas browser)
    */
-  async downloadState(filename = "v86state.bin"): Promise<void> {
+  async downloadState(filename = 'v86state.bin'): Promise<void> {
     const state = await this.saveState();
-    if (state && typeof window !== "undefined") {
+    if (state && typeof window !== 'undefined') {
       const blob = new Blob([state]);
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
       a.download = filename;
       a.click();
@@ -228,17 +228,17 @@ export class V86Controller {
   private setupSerialListener(): void {
     // Remove listener anterior se existir
     if (this.serialByteListener && this.emulator) {
-      this.emulator.remove_listener("serial0-output-byte", this.serialByteListener);
+      this.emulator.remove_listener('serial0-output-byte', this.serialByteListener);
     }
-    
+
     // Cria novo listener e armazena referencia para cleanup
     this.serialByteListener = (byte: number) => {
       const char = String.fromCharCode(byte);
       this.serialBuffer += char;
-      this.serialListeners.forEach(listener => listener(char));
+      this.serialListeners.forEach((listener) => listener(char));
     };
-    
-    this.emulator?.add_listener("serial0-output-byte", this.serialByteListener);
+
+    this.emulator?.add_listener('serial0-output-byte', this.serialByteListener);
   }
 
   /**
@@ -275,7 +275,7 @@ export class V86Controller {
    * Limpa o buffer serial
    */
   clearSerialBuffer(): void {
-    this.serialBuffer = "";
+    this.serialBuffer = '';
   }
 
   /**
@@ -289,18 +289,18 @@ export class V86Controller {
     options: WaitForScreenOptions = {}
   ): Promise<string> {
     const { timeout_msec = 30000 } = options;
-    
+
     return new Promise((resolve, reject) => {
-      let buffer = "";
+      let buffer = '';
       let timeoutId: ReturnType<typeof setTimeout> | undefined;
-      
+
       const cleanup = () => {
         if (timeoutId) clearTimeout(timeoutId);
         this.serialListeners.delete(listener);
       };
-      
+
       const checkMatch = () => {
-        if (typeof expected === "string") {
+        if (typeof expected === 'string') {
           if (buffer.includes(expected)) {
             cleanup();
             resolve(buffer);
@@ -313,19 +313,19 @@ export class V86Controller {
           }
         }
       };
-      
+
       const listener = (char: string) => {
         buffer += char;
         checkMatch();
       };
-      
+
       if (timeout_msec > 0) {
         timeoutId = setTimeout(() => {
           cleanup();
           reject(new Error(`Timeout waiting for serial output: ${expected}`));
         }, timeout_msec);
       }
-      
+
       this.serialListeners.add(listener);
       // Verifica se ja tem match no buffer existente
       buffer = this.serialBuffer;
@@ -418,7 +418,7 @@ export class V86Controller {
     // Acesso interno - nao faz parte da API publica do v86
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const adapter = (this.emulator as any)?.screen_adapter;
-    if (adapter && typeof adapter.get_text_screen === "function") {
+    if (adapter && typeof adapter.get_text_screen === 'function') {
       return adapter.get_text_screen();
     }
     return [];
@@ -429,25 +429,25 @@ export class V86Controller {
    * Conveniente para buscas e exibicao
    */
   getScreenText(): string {
-    return this.getTextScreen().join("\n");
+    return this.getTextScreen().join('\n');
   }
 
   /**
    * Aguarda ate que um texto apareca na tela VGA
    * Implementacao baseada na API oficial do v86
-   * 
+   *
    * @param expected Texto, regex ou array de textos/regex a aguardar
    * @param options Opcoes de timeout
    * @returns true se encontrou, false se timeout
-   * 
+   *
    * @example
    * ```ts
    * // Aguardar prompt de login
    * await controller.waitForScreenText("login:");
-   * 
+   *
    * // Aguardar com regex
    * await controller.waitForScreenText(/root@.*:/);
-   * 
+   *
    * // Aguardar multiplos textos (qualquer um)
    * await controller.waitForScreenText(["login:", "Password:"], { timeout_msec: 60000 });
    * ```
@@ -460,9 +460,6 @@ export class V86Controller {
     const patterns = Array.isArray(expected) ? expected : [expected];
 
     return new Promise((resolve) => {
-      let timeoutId: ReturnType<typeof setTimeout> | undefined;
-      let intervalId: ReturnType<typeof setInterval> | undefined;
-
       const cleanup = () => {
         if (timeoutId) clearTimeout(timeoutId);
         if (intervalId) clearInterval(intervalId);
@@ -471,7 +468,7 @@ export class V86Controller {
       const checkScreen = () => {
         const screenText = this.getScreenText();
         for (const pattern of patterns) {
-          if (typeof pattern === "string") {
+          if (typeof pattern === 'string') {
             if (screenText.includes(pattern)) {
               cleanup();
               resolve(true);
@@ -491,15 +488,16 @@ export class V86Controller {
       checkScreen();
 
       // Polling a cada 100ms
-      intervalId = setInterval(checkScreen, 100);
+      const intervalId = setInterval(checkScreen, 100);
 
       // Timeout
-      if (timeout_msec > 0) {
-        timeoutId = setTimeout(() => {
-          cleanup();
-          resolve(false);
-        }, timeout_msec);
-      }
+      const timeoutId =
+        timeout_msec > 0
+          ? setTimeout(() => {
+            cleanup();
+            resolve(false);
+          }, timeout_msec)
+          : undefined;
     });
   }
 
@@ -511,9 +509,7 @@ export class V86Controller {
    * Cria/escreve um arquivo no filesystem 9p
    */
   async createFile(path: string, data: Uint8Array | string): Promise<void> {
-    const content = typeof data === "string" 
-      ? new TextEncoder().encode(data) 
-      : data;
+    const content = typeof data === 'string' ? new TextEncoder().encode(data) : data;
     await this.emulator?.create_file(path, content);
   }
 
@@ -541,8 +537,10 @@ export class V86Controller {
    */
   async fileExists(path: string): Promise<boolean> {
     try {
-      const result = await this.executeCommand(`test -e "${path}" && echo "exists" || echo "not_exists"`);
-      return result.includes("exists") && !result.includes("not_exists");
+      const result = await this.executeCommand(
+        `test -e "${path}" && echo "exists" || echo "not_exists"`
+      );
+      return result.includes('exists') && !result.includes('not_exists');
     } catch {
       return false;
     }
@@ -564,10 +562,10 @@ export class V86Controller {
   /**
    * Lista arquivos em um diretório (via execução de comando)
    */
-  async listFiles(path: string = "/"): Promise<string[]> {
+  async listFiles(path: string = '/'): Promise<string[]> {
     try {
       const result = await this.executeCommand(`ls -1 "${path}"`);
-      return result.trim().split("\n").filter(Boolean);
+      return result.trim().split('\n').filter(Boolean);
     } catch {
       return [];
     }
@@ -612,29 +610,25 @@ export class V86Controller {
   /**
    * Executa um comando no shell e retorna o output
    * Usa serial para comunicacao
-   * 
+   *
    * @param command Comando a executar
    * @param options Opcoes de execucao
    * @returns Output do comando
-   * 
+   *
    * @example
    * ```ts
    * // Comando simples
    * const files = await controller.executeCommand("ls -la");
-   * 
+   *
    * // Com timeout customizado
    * const result = await controller.executeCommand("make build", { timeout: 60000 });
    * ```
    */
-  async executeCommand(
-    command: string, 
-    options: ExecuteCommandOptions = {}
-  ): Promise<string> {
-    const { timeout = 30000, endMarker = "___V86_CMD_DONE___" } = options;
+  async executeCommand(command: string, options: ExecuteCommandOptions = {}): Promise<string> {
+    const { timeout = 30000, endMarker = '___V86_CMD_DONE___' } = options;
 
     return new Promise((resolve, reject) => {
-      let output = "";
-      let timeoutId: ReturnType<typeof setTimeout>;
+      let output = '';
 
       const cleanup = () => {
         clearTimeout(timeoutId);
@@ -647,20 +641,20 @@ export class V86Controller {
           cleanup();
           // Remove o marker e o comando echo do output
           const cleanOutput = output
-            .replace(new RegExp(`echo ${endMarker}[\\r\\n]*`), "")
-            .replace(endMarker, "")
+            .replace(new RegExp(`echo ${endMarker}[\\r\\n]*`), '')
+            .replace(endMarker, '')
             .trim();
           resolve(cleanOutput);
         }
       };
 
-      timeoutId = setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         cleanup();
         reject(new Error(`Command timeout after ${timeout}ms: ${command}`));
       }, timeout);
 
       this.serialListeners.add(listener);
-      
+
       // Envia comando seguido de echo do marker
       this.sendSerial(`${command}; echo ${endMarker}\n`);
     });
@@ -686,7 +680,7 @@ export class V86Controller {
     waitFor: string | RegExp,
     options: WaitForScreenOptions = {}
   ): Promise<string> {
-    this.sendSerial(command + "\n");
+    this.sendSerial(command + '\n');
     return this.waitForSerialOutput(waitFor, options);
   }
 
@@ -699,7 +693,7 @@ export class V86Controller {
    * @param event Nome do evento
    * @param callback Funcao de callback
    */
-  addListener(event: V86Event, callback: Function): void {
+  addListener(event: V86Event, callback: (...args: unknown[]) => void): void {
     this.emulator?.add_listener(event, callback);
     // Rastreia o listener para cleanup
     if (!this.eventListeners.has(event)) {
@@ -711,7 +705,7 @@ export class V86Controller {
   /**
    * Remove listener de evento
    */
-  removeListener(event: V86Event, callback: Function): void {
+  removeListener(event: V86Event, callback: (...args: unknown[]) => void): void {
     this.emulator?.remove_listener(event, callback);
     this.eventListeners.get(event)?.delete(callback);
   }
@@ -720,8 +714,9 @@ export class V86Controller {
    * Adiciona listener tipado para eventos especificos
    */
   on<T = unknown>(event: V86Event, callback: V86EventListener<T>): () => void {
-    this.addListener(event, callback);
-    return () => this.removeListener(event, callback);
+    const wrappedCallback = callback as (...args: unknown[]) => void;
+    this.addListener(event, wrappedCallback);
+    return () => this.removeListener(event, wrappedCallback);
   }
 
   /**
@@ -736,11 +731,11 @@ export class V86Controller {
       }
 
       const listener = () => {
-        this.emulator?.remove_listener("emulator-ready", listener);
+        this.emulator?.remove_listener('emulator-ready', listener);
         resolve();
       };
 
-      this.emulator.add_listener("emulator-ready", listener);
+      this.emulator.add_listener('emulator-ready', listener);
     });
   }
 
@@ -756,11 +751,11 @@ export class V86Controller {
       }
 
       const listener = () => {
-        this.emulator?.remove_listener("emulator-started", listener);
+        this.emulator?.remove_listener('emulator-started', listener);
         resolve();
       };
 
-      this.emulator.add_listener("emulator-started", listener);
+      this.emulator.add_listener('emulator-started', listener);
     });
   }
 
@@ -775,11 +770,11 @@ export class V86Controller {
       }
 
       const listener = () => {
-        this.emulator?.remove_listener("emulator-stopped", listener);
+        this.emulator?.remove_listener('emulator-stopped', listener);
         resolve();
       };
 
-      this.emulator.add_listener("emulator-stopped", listener);
+      this.emulator.add_listener('emulator-stopped', listener);
     });
   }
 
@@ -787,35 +782,35 @@ export class V86Controller {
    * Adiciona listener para progresso de download
    */
   onDownloadProgress(callback: V86EventListener<DownloadProgress>): () => void {
-    return this.on("download-progress", callback);
+    return this.on('download-progress', callback);
   }
 
   /**
    * Adiciona listener para eventos de tela
    */
   onScreenPutChar(callback: V86EventListener<ScreenPutCharData>): () => void {
-    return this.on("screen-put-char", callback);
+    return this.on('screen-put-char', callback);
   }
 
   /**
    * Adiciona listener para mudanca de tamanho de tela
    */
   onScreenSetSize(callback: V86EventListener<ScreenSetSizeData>): () => void {
-    return this.on("screen-set-size", callback);
+    return this.on('screen-set-size', callback);
   }
 
   /**
    * Adiciona listener para quando mouse e habilitado/desabilitado
    */
   onMouseEnable(callback: V86EventListener<boolean>): () => void {
-    return this.on("mouse-enable", callback);
+    return this.on('mouse-enable', callback);
   }
 
   /**
    * Adiciona listener para eventos 9p
    */
   on9pAttach(callback: V86EventListener<void>): () => void {
-    return this.on("9p-attach", callback);
+    return this.on('9p-attach', callback);
   }
 
   /**
@@ -823,7 +818,7 @@ export class V86Controller {
    * @param callback Recebe [filename]
    */
   on9pReadStart(callback: V86EventListener<[string]>): () => void {
-    return this.on("9p-read-start", callback);
+    return this.on('9p-read-start', callback);
   }
 
   /**
@@ -831,7 +826,7 @@ export class V86Controller {
    * @param callback Recebe [filename, bytes]
    */
   on9pReadEnd(callback: V86EventListener<[string, number]>): () => void {
-    return this.on("9p-read-end", callback);
+    return this.on('9p-read-end', callback);
   }
 
   // ============================================
@@ -879,7 +874,7 @@ export class V86Controller {
    */
   sendNetworkPacket(packet: Uint8Array): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.emulator as any)?.bus?.send?.("net0-receive", packet);
+    (this.emulator as any)?.bus?.send?.('net0-receive', packet);
   }
 
   /**
@@ -887,7 +882,7 @@ export class V86Controller {
    * Evento "net0-send" conforme v86.d.ts
    */
   onNetworkSend(callback: V86EventListener<Uint8Array>): () => void {
-    return this.on("net0-send", callback);
+    return this.on('net0-send', callback);
   }
 
   // ============================================
@@ -899,7 +894,7 @@ export class V86Controller {
    * Evento "virtio-console0-output-bytes" conforme v86.d.ts
    */
   onVirtioConsoleOutput(callback: V86EventListener<Uint8Array>): () => void {
-    return this.on("virtio-console0-output-bytes", callback);
+    return this.on('virtio-console0-output-bytes', callback);
   }
 }
 
@@ -909,11 +904,11 @@ export class V86Controller {
  */
 export function useV86Controller(emulator: V86 | null): V86Controller {
   const controller = new V86Controller();
-  
+
   if (emulator) {
     controller.attach(emulator);
   }
-  
+
   return controller;
 }
 

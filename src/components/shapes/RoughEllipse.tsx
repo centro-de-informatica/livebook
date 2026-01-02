@@ -36,9 +36,9 @@ export function RoughEllipse({
 
   useEffect(() => {
     if (!isReady) return;
-    
+
     clear();
-    
+
     ellipse(centerX, centerY, width, height, {
       fill,
       stroke,
@@ -46,7 +46,20 @@ export function RoughEllipse({
       roughness,
       fillStyle,
     });
-  }, [isReady, width, height, centerX, centerY, fill, stroke, strokeWidth, roughness, fillStyle, ellipse, clear]);
+  }, [
+    isReady,
+    width,
+    height,
+    centerX,
+    centerY,
+    fill,
+    stroke,
+    strokeWidth,
+    roughness,
+    fillStyle,
+    ellipse,
+    clear,
+  ]);
 
   return <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />;
 }

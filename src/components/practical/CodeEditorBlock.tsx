@@ -1,6 +1,6 @@
-import type { CSSProperties, ReactNode } from "react";
-import { CodeEditor } from "../codemirror-wrapper";
-import type { CodeEditorProps } from "../codemirror-wrapper";
+import type { CSSProperties, ReactNode } from 'react';
+import { CodeEditor } from '../codemirror-wrapper';
+import type { CodeEditorProps } from '../codemirror-wrapper';
 
 export interface InlineCodeProps {
   children: ReactNode;
@@ -17,13 +17,13 @@ export interface InlineCodeProps {
  * - Reduced size (0.88em)
  * - Subtle background
  */
-export function InlineCode({ children, className = "", style }: InlineCodeProps) {
+export function InlineCode({ children, className = '', style }: InlineCodeProps) {
   const codeStyle: CSSProperties = {
-    fontFamily: "var(--pt-font-mono)",
-    fontSize: "0.88em",
-    backgroundColor: "var(--pt-color-code-bg)",
-    padding: "0.1em 0.35em",
-    borderRadius: "2px",
+    fontFamily: 'var(--pt-font-mono)',
+    fontSize: '0.88em',
+    backgroundColor: 'var(--pt-color-code-bg)',
+    padding: '0.1em 0.35em',
+    borderRadius: '2px',
     ...style,
   };
 
@@ -34,7 +34,7 @@ export function InlineCode({ children, className = "", style }: InlineCodeProps)
   );
 }
 
-export interface CodeEditorBlockProps extends Omit<CodeEditorProps, "style" | "className"> {
+export interface CodeEditorBlockProps extends Omit<CodeEditorProps, 'style' | 'className'> {
   /** Expand beyond main content to full width (aside + main + aside) on large screens */
   wide?: boolean;
   /** Additional className */
@@ -52,21 +52,21 @@ export interface CodeEditorBlockProps extends Omit<CodeEditorProps, "style" | "c
  */
 export function CodeEditorBlock({
   wide = false,
-  className = "",
+  className = '',
   style,
-  height = "400px",
+  height = '400px',
   ...editorProps
 }: CodeEditorBlockProps) {
   const baseStyle: CSSProperties = {
-    marginTop: "var(--pt-space-lg)",
-    marginBottom: "var(--pt-space-lg)",
-    marginLeft: wide ? 0 : "2em",
-    overflow: "hidden",
+    marginTop: 'var(--pt-space-lg)',
+    marginBottom: 'var(--pt-space-lg)',
+    marginLeft: wide ? 0 : '2em',
+    overflow: 'hidden',
     lineHeight: 1.45,
     ...style,
   };
 
-  const wideClass = wide ? "pt-code-editor-block--wide" : "";
+  const wideClass = wide ? 'pt-code-editor-block--wide' : '';
 
   return (
     <>
@@ -89,10 +89,7 @@ export function CodeEditorBlock({
           }
         `}</style>
       )}
-      <div
-        className={`pt-code-editor-block ${wideClass} ${className}`.trim()}
-        style={baseStyle}
-      >
+      <div className={`pt-code-editor-block ${wideClass} ${className}`.trim()} style={baseStyle}>
         <CodeEditor height={height} {...editorProps} />
       </div>
     </>

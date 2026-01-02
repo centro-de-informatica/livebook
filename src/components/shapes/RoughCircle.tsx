@@ -32,9 +32,9 @@ export function RoughCircle({
 
   useEffect(() => {
     if (!isReady) return;
-    
+
     clear();
-    
+
     circle(center, center, diameter, {
       fill,
       stroke,

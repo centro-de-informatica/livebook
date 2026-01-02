@@ -1,4 +1,4 @@
-import React, { type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from 'react';
 
 export interface AsideProps {
   children: ReactNode;
@@ -17,14 +17,9 @@ export interface AsideProps {
  * - Right-aligned text
  * - Used for supplementary information, notes, and references
  */
-export function Aside({
-  children,
-  position = 'left',
-  className = "",
-  style,
-}: AsideProps) {
+export function Aside({ children, position = 'left', className = '', style }: AsideProps) {
   const positionClass = position === 'right' ? 'pt-aside--right' : 'pt-aside--left';
-  
+
   return (
     <>
       <style>{`

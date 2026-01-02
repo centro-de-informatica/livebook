@@ -1,5 +1,4 @@
-import React from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface BlockquoteProps {
   children: ReactNode;
@@ -22,31 +21,25 @@ export interface BlockquoteProps {
  * - Left border as visual indicator
  * - No background color (cleaner)
  */
-export function Blockquote({
-  children,
-  cite,
-  citeUrl,
-  className = "",
-  style,
-}: BlockquoteProps) {
+export function Blockquote({ children, cite, citeUrl, className = '', style }: BlockquoteProps) {
   const blockquoteStyle: CSSProperties = {
-    margin: "var(--pt-space-lg) 0",
-    marginLeft: "2em",
-    paddingLeft: "1em",
-    borderLeft: "2px solid var(--pt-color-rule)",
-    fontSize: "0.94rem",
-    lineHeight: "var(--pt-line-height)",
+    margin: 'var(--pt-space-lg) 0',
+    marginLeft: '2em',
+    paddingLeft: '1em',
+    borderLeft: '2px solid var(--pt-color-rule)',
+    fontSize: '0.94rem',
+    lineHeight: 'var(--pt-line-height)',
     ...style,
   };
 
   const footerStyle: CSSProperties = {
-    marginTop: "var(--pt-space-sm)",
-    fontSize: "0.9em",
-    color: "var(--pt-color-text-muted)",
+    marginTop: 'var(--pt-space-sm)',
+    fontSize: '0.9em',
+    color: 'var(--pt-color-text-muted)',
   };
 
   const citeStyle: CSSProperties = {
-    fontStyle: "normal",
+    fontStyle: 'normal',
   };
 
   return (
@@ -54,7 +47,7 @@ export function Blockquote({
       {children}
       {cite && (
         <footer style={footerStyle}>
-          <span style={{ marginRight: "0.25em" }}>{"\u2014"}</span>
+          <span style={{ marginRight: '0.25em' }}>{'\u2014'}</span>
           {citeUrl ? (
             <cite style={citeStyle}>
               <a href={citeUrl}>{cite}</a>

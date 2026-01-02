@@ -1,5 +1,5 @@
-import { Terminal } from "./Terminal";
-import type { V86Controller } from "../v86-wrapper/V86Controller";
+import { Terminal } from './Terminal';
+import type { V86Controller } from '../v86-wrapper/V86Controller';
 
 /**
  * Demo do Terminal com callbacks funcionais
@@ -8,21 +8,27 @@ import type { V86Controller } from "../v86-wrapper/V86Controller";
  */
 export function TerminalDemo() {
   const handleReady = (controller: V86Controller) => {
-    console.log("Terminal pronto!", controller);
+    console.log('Terminal pronto!', controller);
     // Expor controller globalmente para debug
     (window as unknown as { terminalController: V86Controller }).terminalController = controller;
   };
 
   const handleStarted = () => {
-    console.log("Emulador iniciado");
+    console.log('Emulador iniciado');
   };
 
   const handleStopped = () => {
-    console.log("Emulador parado");
+    console.log('Emulador parado');
   };
 
-  const handleDownloadProgress = (progress: { file_name: string; loaded: number; total: number }) => {
-    console.log(`Download: ${progress.file_name} - ${Math.round((progress.loaded / progress.total) * 100)}%`);
+  const handleDownloadProgress = (progress: {
+    file_name: string;
+    loaded: number;
+    total: number;
+  }) => {
+    console.log(
+      `Download: ${progress.file_name} - ${Math.round((progress.loaded / progress.total) * 100)}%`
+    );
   };
 
   const handleScreenSetSize = (data: [number, number, number]) => {

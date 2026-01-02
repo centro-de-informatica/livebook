@@ -1,10 +1,9 @@
-import React from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface ListProps {
   children: ReactNode;
   /** List type: unordered or ordered */
-  type?: "unordered" | "ordered";
+  type?: 'unordered' | 'ordered';
   /** Additional className */
   className?: string;
   /** Inline style override */
@@ -27,19 +26,14 @@ export interface ListItemProps {
  * - Circled numbers for ordered lists
  * - Proper indentation and spacing
  */
-export function List({
-  children,
-  type = "unordered",
-  className = "",
-  style,
-}: ListProps) {
-  const Tag = type === "ordered" ? "ol" : "ul";
+export function List({ children, type = 'unordered', className = '', style }: ListProps) {
+  const Tag = type === 'ordered' ? 'ol' : 'ul';
 
   const listStyle: CSSProperties = {
-    margin: "var(--pt-space-md) 0",
-    paddingLeft: type === "ordered" ? "2.5em" : "1.5em",
-    listStyleType: "none",
-    counterReset: type === "ordered" ? "pt-list-counter" : undefined,
+    margin: 'var(--pt-space-md) 0',
+    paddingLeft: type === 'ordered' ? '2.5em' : '1.5em',
+    listStyleType: 'none',
+    counterReset: type === 'ordered' ? 'pt-list-counter' : undefined,
     ...style,
   };
 
@@ -83,11 +77,11 @@ export function List({
   );
 }
 
-export function ListItem({ children, className = "", style }: ListItemProps) {
+export function ListItem({ children, className = '', style }: ListItemProps) {
   const itemStyle: CSSProperties = {
-    marginBottom: "var(--pt-space-sm)",
+    marginBottom: 'var(--pt-space-sm)',
     paddingLeft: 0,
-    lineHeight: "var(--pt-line-height)",
+    lineHeight: 'var(--pt-line-height)',
     ...style,
   };
 

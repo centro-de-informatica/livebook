@@ -1,20 +1,20 @@
-import { useEffect, useLayoutEffect, useRef, useCallback } from "react";
-import type { V86 as V86Type, V86Options, V86Image } from "../../types/v86";
+import { useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import type { V86 as V86Type, V86Options, V86Image } from '../../types/v86';
 // Import the wasm file path from the v86 package for proper bundler resolution
-import v86WasmUrl from "v86/build/v86.wasm?url";
+import v86WasmUrl from 'v86/build/v86.wasm?url';
 
 // ============================================
 // TIPOS E INTERFACES
 // ============================================
 
-export type V86ImagePreset = "alpine" | "buildroot" | "linux4";
+export type V86ImagePreset = 'alpine' | 'buildroot' | 'linux4';
 
 /**
  * Configuracao de rede para o emulador
  */
 export interface V86NetworkConfig {
   /** Tipo de dispositivo de rede */
-  type?: "ne2k" | "virtio";
+  type?: 'ne2k' | 'virtio';
   /** URL do relay websocket */
   relay_url?: string;
   /** ID do dispositivo */
@@ -28,7 +28,7 @@ export interface V86NetworkConfig {
   /** Habilitar masquerade */
   masquerade?: boolean;
   /** Metodo DNS */
-  dns_method?: "static" | "doh";
+  dns_method?: 'static' | 'doh';
   /** Servidor DoH */
   doh_server?: string;
   /** Proxy CORS */
@@ -121,33 +121,36 @@ export interface V86EmulatorProps {
 
 const IMAGE_PRESETS: Record<V86ImagePreset, Partial<V86EmulatorConfig>> = {
   alpine: {
-    cdromUrl: "/v86/images/alpine-virt-3.19.9-x86.iso",
-    bzimageUrl: "",
-    cmdline: "",
+    cdromUrl: '/v86/images/alpine-virt-3.19.9-x86.iso',
+    bzimageUrl: '',
+    cmdline: '',
   },
   buildroot: {
-    cdromUrl: "",
-    bzimageUrl: "/v86/images/buildroot-bzimage68.bin",
-    cmdline: "tsc=reliable mitigations=off random.trust_cpu=on",
+    cdromUrl: '',
+    bzimageUrl: '/v86/images/buildroot-bzimage68.bin',
+    cmdline: 'tsc=reliable mitigations=off random.trust_cpu=on',
   },
   linux4: {
-    cdromUrl: "/v86/images/linux4.iso",
-    bzimageUrl: "",
-    cmdline: "",
+    cdromUrl: '/v86/images/linux4.iso',
+    bzimageUrl: '',
+    cmdline: '',
   },
 };
 
-const DEFAULT_CONFIG: Omit<Required<V86EmulatorConfig>, "preset" | "network" | "filesystem"> & { network?: V86NetworkConfig; filesystem?: V86FilesystemConfig } = {
-  biosUrl: "/v86/bios/seabios.bin",
-  vgaBiosUrl: "/v86/bios/vgabios.bin",
-  cdromUrl: "/v86/images/alpine-virt-3.19.9-x86.iso",
-  hdaUrl: "",
-  hdbUrl: "",
-  fdaUrl: "",
-  fdbUrl: "",
-  bzimageUrl: "",
-  initrdUrl: "",
-  cmdline: "",
+const DEFAULT_CONFIG: Omit<Required<V86EmulatorConfig>, 'preset' | 'network' | 'filesystem'> & {
+  network?: V86NetworkConfig;
+  filesystem?: V86FilesystemConfig;
+} = {
+  biosUrl: '/v86/bios/seabios.bin',
+  vgaBiosUrl: '/v86/bios/vgabios.bin',
+  cdromUrl: '/v86/images/alpine-virt-3.19.9-x86.iso',
+  hdaUrl: '',
+  hdbUrl: '',
+  fdaUrl: '',
+  fdbUrl: '',
+  bzimageUrl: '',
+  initrdUrl: '',
+  cmdline: '',
   memorySize: 128 * 1024 * 1024,
   vgaMemorySize: 8 * 1024 * 1024,
   autostart: true,
@@ -155,7 +158,7 @@ const DEFAULT_CONFIG: Omit<Required<V86EmulatorConfig>, "preset" | "network" | "
   acpi: false,
   virtioConsole: false,
   virtioBalloon: false,
-  initialStateUrl: "",
+  initialStateUrl: '',
   preserveMacFromState: false,
   bootOrder: 0,
   disableJit: false,
@@ -169,9 +172,9 @@ async function loadV86(): Promise<typeof V86Type> {
   if (V86Constructor) {
     return V86Constructor;
   }
-  
+
   // Dynamic import of the ESM module from v86 npm package
-  const v86Module = await import("v86");
+  const v86Module = await import('v86');
   V86Constructor = v86Module.V86;
   return v86Module.V86;
 }
@@ -183,7 +186,7 @@ async function loadV86(): Promise<typeof V86Type> {
 /**
  * Componente React que encapsula o emulador v86
  * Thin wrapper para facilitar o uso do v86 no React/Astro
- * 
+ *
  * @example
  * ```tsx
  * <V86Emulator
@@ -211,7 +214,7 @@ export function V86Emulator({
   const isMountedRef = useRef(true);
 
   // Refs para armazenar listeners (para remocao no cleanup)
-  const listenersRef = useRef<Map<string, Function>>(new Map());
+  const listenersRef = useRef<Map<string, (...args: unknown[]) => void>>(new Map());
 
   // Refs para callbacks (evita stale closures)
   const onReadyRef = useRef(onReady);
@@ -239,12 +242,12 @@ export function V86Emulator({
   });
 
   const presetConfig = config.preset ? IMAGE_PRESETS[config.preset] : {};
-  
+
   // Filtra propriedades undefined para evitar sobrescrever defaults
   const filteredConfig = Object.fromEntries(
     Object.entries(config).filter(([_, v]) => v !== undefined)
   ) as Partial<V86EmulatorConfig>;
-  
+
   const mergedConfig = { ...DEFAULT_CONFIG, ...presetConfig, ...filteredConfig };
 
   const initializeEmulator = useCallback(async () => {
@@ -347,90 +350,92 @@ export function V86Emulator({
       }
 
       const emulator = new V86(options);
-      
+
       // Verificar se o componente ainda esta montado (React Strict Mode pode desmontar durante init)
       if (!isMountedRef.current) {
-        emulator.destroy().catch(() => {});
+        emulator.destroy().catch(() => { });
         return;
       }
-      
+
       emulatorRef.current = emulator;
-      
+
       // Limpa listeners anteriores
       listenersRef.current.clear();
 
       // Helper para adicionar listener com rastreamento
-      const addTrackedListener = (event: string, listener: Function) => {
+      const addTrackedListener = (event: string, listener: (...args: unknown[]) => void) => {
         emulator.add_listener(event as Parameters<typeof emulator.add_listener>[0], listener);
         listenersRef.current.set(event, listener);
       };
 
       // Event: emulator-ready
-      addTrackedListener("emulator-ready", () => {
+      addTrackedListener('emulator-ready', () => {
         if (isMountedRef.current) {
           onReadyRef.current?.(emulator);
         }
       });
 
       // Event: emulator-started
-      addTrackedListener("emulator-started", () => {
+      addTrackedListener('emulator-started', () => {
         if (isMountedRef.current) {
           onStartedRef.current?.();
         }
       });
 
       // Event: emulator-stopped
-      addTrackedListener("emulator-stopped", () => {
+      addTrackedListener('emulator-stopped', () => {
         if (isMountedRef.current) {
           onStoppedRef.current?.();
         }
       });
 
       // Event: serial output (serial0-output-byte conforme v86.d.ts)
-      addTrackedListener("serial0-output-byte", (byte: number) => {
+      addTrackedListener('serial0-output-byte', ((byte: number) => {
         if (isMountedRef.current) {
           const char = String.fromCharCode(byte);
           onSerialOutputRef.current?.(char);
         }
-      });
+      }) as (...args: unknown[]) => void);
 
       // Event: screen-put-char (conforme v86.d.ts)
-      addTrackedListener("screen-put-char", (data: [number, number, number, number, number]) => {
+      addTrackedListener('screen-put-char', ((data: [number, number, number, number, number]) => {
         if (isMountedRef.current) {
           onScreenPutCharRef.current?.(data);
         }
-      });
+      }) as (...args: unknown[]) => void);
 
       // Event: screen-set-size (conforme v86.d.ts)
-      addTrackedListener("screen-set-size", (data: [number, number, number]) => {
+      addTrackedListener('screen-set-size', ((data: [number, number, number]) => {
         if (isMountedRef.current) {
           onScreenSetSizeRef.current?.(data);
         }
-      });
+      }) as (...args: unknown[]) => void);
 
       // Event: mouse-enable (conforme v86.d.ts)
-      addTrackedListener("mouse-enable", (enabled: boolean) => {
+      addTrackedListener('mouse-enable', ((enabled: boolean) => {
         if (isMountedRef.current) {
           onMouseEnableRef.current?.(enabled);
         }
-      });
+      }) as (...args: unknown[]) => void);
 
       // Event: download-progress (conforme v86.d.ts)
-      addTrackedListener("download-progress", (data: { file_name: string; loaded: number; total: number }) => {
-        if (isMountedRef.current) {
-          onDownloadProgressRef.current?.(data);
-        }
-      });
+      addTrackedListener(
+        'download-progress',
+        ((data: { file_name: string; loaded: number; total: number }) => {
+          if (isMountedRef.current) {
+            onDownloadProgressRef.current?.(data);
+          }
+        }) as (...args: unknown[]) => void
+      );
 
       // Event: download-error (conforme v86.d.ts)
-      addTrackedListener("download-error", (data: { file_name: string; error: Error }) => {
+      addTrackedListener('download-error', ((data: { file_name: string; error: Error }) => {
         if (isMountedRef.current) {
           onDownloadErrorRef.current?.(data);
         }
-      });
-
+      }) as (...args: unknown[]) => void);
     } catch (error) {
-      console.error("Failed to initialize V86 emulator:", error);
+      console.error('Failed to initialize V86 emulator:', error);
       isInitializedRef.current = false;
     }
   }, [
@@ -455,19 +460,24 @@ export function V86Emulator({
     mergedConfig.preserveMacFromState,
     mergedConfig.bootOrder,
     mergedConfig.bzimageInitrdFromFilesystem,
-    // Callbacks usam refs, nao precisam estar nas deps
+    mergedConfig.disableSpeaker,
+    mergedConfig.filesystem,
+    mergedConfig.network,
   ]);
 
   useEffect(() => {
     isMountedRef.current = true;
     initializeEmulator();
 
+    // Captura a referencia atual para uso no cleanup
+    const currentListeners = listenersRef.current;
+
     return () => {
       isMountedRef.current = false;
       const emulator = emulatorRef.current;
       if (emulator) {
         // Remove todos os listeners rastreados antes de destruir
-        listenersRef.current.forEach((listener, event) => {
+        currentListeners.forEach((listener, event) => {
           try {
             emulator.remove_listener(
               event as Parameters<typeof emulator.remove_listener>[0],
@@ -477,13 +487,13 @@ export function V86Emulator({
             // Ignorar erros na remocao de listeners
           }
         });
-        listenersRef.current.clear();
-        
+        currentListeners.clear();
+
         emulatorRef.current = null;
         isInitializedRef.current = false;
         // Usar try/catch para evitar erro se o emulador ainda nao estiver totalmente inicializado
         try {
-          emulator.destroy().catch(() => {});
+          emulator.destroy().catch(() => { });
         } catch {
           // Ignorar erros no destroy
         }
@@ -492,19 +502,19 @@ export function V86Emulator({
   }, [initializeEmulator]);
 
   return (
-    <div 
+    <div
       ref={screenContainerRef}
       style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#000",
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#000',
       }}
     >
-      <div style={{ whiteSpace: "pre", font: "14px monospace", lineHeight: "14px" }}></div>
-      <canvas style={{ display: "block" }}></canvas>
+      <div style={{ whiteSpace: 'pre', font: '14px monospace', lineHeight: '14px' }}></div>
+      <canvas style={{ display: 'block' }}></canvas>
     </div>
   );
 }

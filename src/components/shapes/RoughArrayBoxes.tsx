@@ -41,14 +41,14 @@ export function RoughArrayBoxes({
   // Draw boxes
   useEffect(() => {
     if (!isReady) return;
-    
+
     clear();
-    
+
     for (let i = 0; i < count; i++) {
       const x = 10 + i * (boxWidth + gap);
       const y = 10;
       const isActive = i === activeIndex;
-      
+
       rectangle(x, y, boxWidth, boxHeight, {
         roughness: 1.5,
         strokeWidth: isActive ? 2.5 : 1.5,

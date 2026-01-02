@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface ParagraphProps {
   children: ReactNode;
@@ -24,18 +24,18 @@ export function Paragraph({
   children,
   lead = false,
   noIndent = false,
-  className = "",
+  className = '',
   style,
 }: ParagraphProps) {
   const baseStyle: CSSProperties = {
     margin: 0,
-    marginBottom: "var(--pt-space-sm)",
+    marginBottom: 'var(--pt-space-sm)',
   };
 
   const leadStyle: CSSProperties = lead
     ? {
-        fontSize: "1.05em",
-        lineHeight: "var(--pt-line-height-loose)",
+        fontSize: '1.05em',
+        lineHeight: 'var(--pt-line-height-loose)',
       }
     : {};
 
@@ -45,14 +45,9 @@ export function Paragraph({
     ...style,
   };
 
-  const classes = [
-    "pt-paragraph",
-    lead ? "pt-lead" : "",
-    noIndent ? "pt-no-indent" : "",
-    className,
-  ]
+  const classes = ['pt-paragraph', lead ? 'pt-lead' : '', noIndent ? 'pt-no-indent' : '', className]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return (
     <p className={classes} style={combinedStyle}>
